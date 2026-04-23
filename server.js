@@ -221,6 +221,7 @@ app.post('/api/restaurar', auth, async (req, res) => {
           const url = JSON.parse(data.resultJson)?.resultUrls?.[0];
           if (url) {
             const novos = await db.descontarCredito(req.email);
+            await db.salvarRestauracao(req.email, url);
             return res.json({ sucesso: true, imageUrl: url, creditos: novos });
           }
         } catch(e) {}
@@ -231,6 +232,17 @@ app.post('/api/restaurar', auth, async (req, res) => {
   } catch (err) {
     console.error('Erro restaurar:', err.message);
     res.json({ sucesso: false, erro: err.message });
+  }
+});
+
+
+// Histórico de restaurações
+app.get('/api/historico', auth, async (req, res) => {
+  try {
+    const items = await db.getRestauracoes(req.email);
+    res.json(items);
+  } catch (err) {
+    res.json([]);
   }
 });
 
