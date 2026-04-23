@@ -67,7 +67,7 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ sucesso: true, token, creditos: usuario.creditos });
 });
 
-app.get('/api/usuario', auth, (req, res) => {
+app.get('/api/usuario', auth, async (req, res) => {
   const u = await db.getUsuario(req.email);
   res.json(u ? { email: u.email, creditos: u.creditos } : { email: req.email, creditos: 0 });
 });
@@ -178,7 +178,7 @@ app.post('/api/pagamento/webhook', async (req, res) => {
 // ══════════════════════════════════════════════════
 //  ADMIN
 // ══════════════════════════════════════════════════
-app.post('/api/admin/creditos', (req, res) => {
+app.post('/api/admin/creditos', async (req, res) => {
   const { secret, email, creditos } = req.body;
   if (secret !== ADMIN_SECRET) return res.status(403).json({ erro: 'Sem permissão.' });
   const u = await db.getUsuario(email);
