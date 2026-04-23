@@ -332,6 +332,31 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
   </div>
 </div>
 
+
+<!-- MODAL PIX -->
+<div class="overlay" id="ovPix">
+  <div class="modal">
+    <button class="modal-close" onclick="fecharOverlay('ovPix')">✕</button>
+    <h3 id="pixTitulo">Pagamento PIX</h3>
+    <p class="modal-sub">Escaneie o QR Code ou copie o código PIX abaixo.</p>
+    <div style="text-align:center;margin:1rem 0" id="pixQrArea">
+      <div style="width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:.5rem">Gerando PIX...</p>
+    </div>
+    <div id="pixCodigoArea" style="display:none">
+      <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.8rem">
+        <div style="font-size:.7rem;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.5px">PIX Copia e Cola</div>
+        <div id="pixCodigo" style="font-family:monospace;font-size:.72rem;word-break:break-all;color:var(--text);cursor:pointer" onclick="copiarPix()"></div>
+      </div>
+      <button class="btn-gold" onclick="copiarPix()">Copiar código PIX</button>
+      <div id="pixMsg" style="text-align:center;font-size:.8rem;color:var(--gold);margin-top:.5rem;display:none">✓ Código copiado!</div>
+    </div>
+    <div id="pixAguardando" style="display:none;text-align:center;margin-top:1rem">
+      <div style="font-size:.82rem;color:var(--muted)">Aguardando confirmação do pagamento...</div>
+    </div>
+  </div>
+</div>
+
 <script>
 let TOKEN = localStorage.getItem('restaures_jwt');
 let USUARIO = null;
