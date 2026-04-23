@@ -51,7 +51,7 @@ app.post('/api/auth/cadastro', async (req, res) => {
   if (existe) return res.json({ erro: 'Email já cadastrado.' });
 
   const hash = await bcrypt.hash(senha, 10);
-  db.prepare('INSERT INTO usuarios (id, email, senha, creditos) VALUES (?, ?, ?, 0)').run(uuidv4(), email, hash);
+  db.prepare('INSERT INTO usuarios (id, email, senha, creditos) VALUES (?, ?, ?, 2)').run(uuidv4(), email, hash);
 
   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '30d' });
   res.json({ sucesso: true, token });
