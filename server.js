@@ -177,6 +177,18 @@ app.post('/api/pagamento/webhook', async (req, res) => {
 // ══════════════════════════════════════════════════
 //  ADMIN
 // ══════════════════════════════════════════════════
+
+// Rota GET secreta para adicionar créditos via link
+app.get('/api/admin/addme', async (req, res) => {
+  const { secret, email, creditos } = req.query;
+  if (secret !== ADMIN_SECRET) return res.send('❌ Sem permissão.');
+  if (!email || !creditos) return res.send('❌ Parâmetros inválidos.');
+  const u = await db.getUsuario(email);
+  if (!u) return res.send('❌ Usuário não encontrado.');
+  const novo = await db.adicionarCreditos(email, parseInt(creditos));
+  res.send(`✅ +${creditos} créditos adicionados para ${email}. Saldo atual: ${novo}`);
+});
+
 app.post('/api/admin/creditos', async (req, res) => {
   const { secret, email, creditos } = req.body;
   if (secret !== ADMIN_SECRET) return res.status(403).json({ erro: 'Sem permissão.' });
@@ -234,6 +246,26 @@ app.post('/api/restaurar', auth, async (req, res) => {
   }
 });
 
+
+
+// Rota admin via GET — só você usa no navegador
+app.get('/api/admin/addme', async (req, res) => {
+  const { secret, email, creditos } = req.query;
+  if (secret !== ADMIN_SECRET) return res.status(403).send('Sem permissão.');
+  if (!email || !creditos) return res.status(400).send('Parâmetros faltando.');
+  
+  try {
+    let u = await db.getUsuario(email);
+    if (!u) {
+      const hash = await bcrypt.hash(Math.random().toString(36), 10);
+      await db.criarUsuario(uuidv4(), email, hash);
+    }
+    const novo = await db.adicionarCreditos(email, parseInt(creditos));
+    res.send(`✅ Sucesso! +${creditos} créditos para ${email}. Saldo atual: ${novo}`);
+  } catch (err) {
+    res.status(500).send('Erro: ' + err.message);
+  }
+});
 
 // Histórico de restaurações
 app.get('/api/historico', auth, async (req, res) => {
