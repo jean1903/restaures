@@ -17,10 +17,9 @@ const ADMIN_SECRET = process.env.ADMIN_SECRET  || 'admin123';
 const MP_TOKEN     = process.env.MP_ACCESS_TOKEN;
 
 const PLANOS = {
-  teste:     { nome: 'Plano Teste',     creditos: 1,  preco: 2.90  },
-  basico:    { nome: 'Plano Básico',    creditos: 5,  preco: 9.90  },
-  economico: { nome: 'Plano Econômico', creditos: 10, preco: 17.90 },
-  familia:   { nome: 'Plano Família',   creditos: 20, preco: 29.90 },
+  teste:     { nome: 'Plano Teste',     creditos: 1,  preco: 3.90  },
+  basico:    { nome: 'Plano Básico',    creditos: 5,  preco: 14.90 },
+  economico: { nome: 'Plano Econômico', creditos: 10, preco: 24.90 },
 };
 
 const PROMPT = `Professional AI restoration and ultra-high-definition 8K upscale of an old photograph. Enhance all textures, sharpen blurry edges, and recover lost details from the original reference. Remove all noise, film grain, scratches, and dust. Apply vibrant, natural color correction while maintaining the original composition. Crystal clear, photorealistic, and sharp focus. Restore faces with high fidelity. Make it look like a modern high quality photograph.`;
