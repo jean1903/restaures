@@ -97,9 +97,12 @@ app.get('/api/usuario', auth, (req, res) => {
 app.post('/api/webhook/wiapy', async (req, res) => {
   try {
     // Valida token de autenticação da Wiapy
-    const authHeader = req.headers['authorization'];
-    if (WIAPY_TOKEN && authHeader !== WIAPY_TOKEN) {
-      console.log('Webhook Wiapy: token inválido');
+    // A Wiapy envia o token diretamente no header authorization (sem Bearer)
+    const authHeader = req.headers['authorization'] || '';
+    const tokenRecebido = authHeader.replace('Bearer ', '').trim();
+    console.log('Webhook recebido - token:', tokenRecebido, '| esperado:', WIAPY_TOKEN);
+    if (WIAPY_TOKEN && tokenRecebido !== WIAPY_TOKEN) {
+      console.log('Webhook Wiapy: token invalido');
       return res.status(401).json({ ok: false });
     }
 
