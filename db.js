@@ -50,4 +50,20 @@ async function adicionarCreditos(email, quantidade) {
   return novos;
 }
 
-module.exports = { getUsuario, criarUsuario, descontarCredito, adicionarCreditos };
+async function salvarRestauracao(email, url) {
+  await axios.post(
+    `${SUPABASE_URL}/rest/v1/restauracoes`,
+    { email, url },
+    { headers: headers() }
+  );
+}
+
+async function getRestauracoes(email) {
+  const res = await axios.get(
+    `${SUPABASE_URL}/rest/v1/restauracoes?email=eq.${encodeURIComponent(email)}&order=criado_em.desc&limit=50`,
+    { headers: headers() }
+  );
+  return res.data || [];
+}
+
+module.exports = { getUsuario, criarUsuario, descontarCredito, adicionarCreditos, salvarRestauracao, getRestauracoes };
