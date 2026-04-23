@@ -49,9 +49,9 @@ app.post('/api/auth/cadastro', async (req, res) => {
   const { email, senha } = req.body;
   if (!email || !email.includes('@')) return res.json({ erro: 'Email inválido.' });
   if (!senha || senha.length < 6) return res.json({ erro: 'Senha deve ter mínimo 6 caracteres.' });
-  if (db.getUsuario(email)) return res.json({ erro: 'Email já cadastrado.' });
+  if (await db.getUsuario(email)) return res.json({ erro: 'Email já cadastrado.' });
   const hash = await bcrypt.hash(senha, 10);
-  db.criarUsuario(uuidv4(), email, hash);
+  await await db.criarUsuario(uuidv4(), email, hash);
   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '30d' });
   res.json({ sucesso: true, token, creditos: 0 });
 });
@@ -59,7 +59,7 @@ app.post('/api/auth/cadastro', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   const { email, senha } = req.body;
   if (!email || !senha) return res.json({ erro: 'Preencha email e senha.' });
-  const usuario = db.getUsuario(email);
+  const usuario = await db.getUsuario(email);
   if (!usuario) return res.json({ erro: 'Email não encontrado.' });
   const ok = await bcrypt.compare(senha, usuario.senha);
   if (!ok) return res.json({ erro: 'Senha incorreta.' });
@@ -68,7 +68,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 app.get('/api/usuario', auth, (req, res) => {
-  const u = db.getUsuario(req.email);
+  const u = await db.getUsuario(req.email);
   res.json(u ? { email: u.email, creditos: u.creditos } : { email: req.email, creditos: 0 });
 });
 
@@ -128,9 +128,9 @@ app.get('/api/pagamento/status/:id', auth, async (req, res) => {
     if (status === 'approved') {
       const { email, plano, creditos } = response.data.metadata;
       const userEmail = email || req.email;
-      const u = db.getUsuario(userEmail);
+      const u = await db.getUsuario(userEmail);
       if (u) {
-        const novo = db.adicionarCreditos(userEmail, parseInt(creditos));
+        const novo = await db.adicionarCreditos(userEmail, parseInt(creditos));
         return res.json({ sucesso: true, status, creditos: novo });
       }
     }
@@ -158,12 +158,12 @@ app.post('/api/pagamento/webhook', async (req, res) => {
         const email   = payment.metadata?.email || payment.payer?.email;
         const creditos = parseInt(payment.metadata?.creditos || 0);
         if (email && creditos > 0) {
-          const u = db.getUsuario(email);
+          const u = await db.getUsuario(email);
           if (!u) {
             const hash = await bcrypt.hash(Math.random().toString(36), 10);
-            db.criarUsuario(uuidv4(), email, hash);
+            await await db.criarUsuario(uuidv4(), email, hash);
           }
-          const novo = db.adicionarCreditos(email, creditos);
+          const novo = await db.adicionarCreditos(email, creditos);
           console.log(`+${creditos} créditos para ${email} | Total: ${novo}`);
         }
       }
@@ -181,9 +181,9 @@ app.post('/api/pagamento/webhook', async (req, res) => {
 app.post('/api/admin/creditos', (req, res) => {
   const { secret, email, creditos } = req.body;
   if (secret !== ADMIN_SECRET) return res.status(403).json({ erro: 'Sem permissão.' });
-  const u = db.getUsuario(email);
+  const u = await db.getUsuario(email);
   if (!u) return res.json({ erro: 'Usuário não encontrado.' });
-  const novo = db.adicionarCreditos(email, creditos);
+  const novo = await db.adicionarCreditos(email, creditos);
   res.json({ sucesso: true, creditos: novo });
 });
 
@@ -191,7 +191,7 @@ app.post('/api/admin/creditos', (req, res) => {
 //  RESTAURAÇÃO
 // ══════════════════════════════════════════════════
 app.post('/api/restaurar', auth, async (req, res) => {
-  const u = db.getUsuario(req.email);
+  const u = await db.getUsuario(req.email);
   if (!u || u.creditos < 1) return res.json({ sucesso: false, semCreditos: true, erro: 'Sem créditos.' });
 
   try {
@@ -220,7 +220,7 @@ app.post('/api/restaurar', auth, async (req, res) => {
         try {
           const url = JSON.parse(data.resultJson)?.resultUrls?.[0];
           if (url) {
-            const novos = db.descontarCredito(req.email);
+            const novos = await db.descontarCredito(req.email);
             return res.json({ sucesso: true, imageUrl: url, creditos: novos });
           }
         } catch(e) {}
