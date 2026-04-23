@@ -1,46 +1,53 @@
-const fs   = require('fs');
-const path = require('path');
+const axios = require('axios');
 
-const DB_FILE = path.join(__dirname, 'restaures_data.json');
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://svfjwbjvdvcbahdstjne.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
-function load() {
-  if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify({ usuarios: {} }, null, 2));
-  }
-  return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+const headers = () => ({
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation',
+});
+
+async function getUsuario(email) {
+  const res = await axios.get(
+    `${SUPABASE_URL}/rest/v1/usuarios?email=eq.${encodeURIComponent(email)}&limit=1`,
+    { headers: headers() }
+  );
+  return res.data[0] || null;
 }
 
-function save(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+async function criarUsuario(id, email, senha) {
+  await axios.post(
+    `${SUPABASE_URL}/rest/v1/usuarios`,
+    { id, email, senha, creditos: 0 },
+    { headers: headers() }
+  );
 }
 
-module.exports = {
-  getUsuario(email) {
-    return load().usuarios[email] || null;
-  },
+async function descontarCredito(email) {
+  const u = await getUsuario(email);
+  if (!u) return 0;
+  const novos = Math.max(0, u.creditos - 1);
+  await axios.patch(
+    `${SUPABASE_URL}/rest/v1/usuarios?email=eq.${encodeURIComponent(email)}`,
+    { creditos: novos },
+    { headers: headers() }
+  );
+  return novos;
+}
 
-  criarUsuario(id, email, senha) {
-    const data = load();
-    data.usuarios[email] = { id, email, senha, creditos: 0, criado_em: new Date().toISOString() };
-    save(data);
-  },
+async function adicionarCreditos(email, quantidade) {
+  const u = await getUsuario(email);
+  if (!u) return false;
+  const novos = u.creditos + quantidade;
+  await axios.patch(
+    `${SUPABASE_URL}/rest/v1/usuarios?email=eq.${encodeURIComponent(email)}`,
+    { creditos: novos },
+    { headers: headers() }
+  );
+  return novos;
+}
 
-  atualizarSenha(email, senha) {
-    const data = load();
-    if (data.usuarios[email]) { data.usuarios[email].senha = senha; save(data); }
-  },
-
-  descontarCredito(email) {
-    const data = load();
-    if (data.usuarios[email]) { data.usuarios[email].creditos -= 1; save(data); }
-    return data.usuarios[email]?.creditos ?? 0;
-  },
-
-  adicionarCreditos(email, quantidade) {
-    const data = load();
-    if (!data.usuarios[email]) return false;
-    data.usuarios[email].creditos += quantidade;
-    save(data);
-    return data.usuarios[email].creditos;
-  },
-};
+module.exports = { getUsuario, criarUsuario, descontarCredito, adicionarCreditos };
