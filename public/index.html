@@ -10,8 +10,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-
-/* NAV */
 nav{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,8,8,0.97);backdrop-filter:blur(12px);z-index:200}
 .logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;text-decoration:none}
 .nav-right{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
@@ -21,8 +19,6 @@ nav{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:cen
 .btn-nav:hover{border-color:var(--gold);color:var(--gold)}
 .btn-nav.gold{background:var(--gold);color:var(--dark);border-color:var(--gold)}
 .btn-nav.gold:hover{background:var(--gold-l)}
-
-/* MODAIS */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999;align-items:center;justify-content:center;padding:1rem}
 .overlay.active{display:flex}
 .modal{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:420px;position:relative;animation:fadeUp .25s ease}
@@ -43,8 +39,6 @@ nav{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:cen
 .msg{font-size:.82rem;margin-top:.7rem;text-align:center;padding:.5rem;border-radius:6px}
 .msg.err{color:#ff6b6b;background:rgba(255,107,107,.1)}
 .msg.ok{color:#69db7c;background:rgba(105,219,124,.1)}
-
-/* HERO */
 .hero{padding:5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(201,168,76,.07) 0%,transparent 70%);pointer-events:none}
 .badge{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border);color:var(--gold);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;padding:.3rem 1rem;border-radius:99px;margin-bottom:1.8rem}
@@ -58,9 +52,6 @@ h1 em{font-style:italic;color:var(--gold)}
 .urgencia{display:inline-block;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold-l);font-size:.78rem;padding:.4rem 1.2rem;border-radius:99px;margin-bottom:2rem}
 .btn-cta{display:inline-block;background:var(--gold);color:var(--dark);padding:1rem 2.5rem;border-radius:10px;font-size:1rem;font-weight:500;text-decoration:none;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;margin-bottom:.8rem}
 .btn-cta:hover{background:var(--gold-l);transform:translateY(-2px)}
-.cta-sub{color:var(--muted);font-size:.78rem}
-
-/* ANTES E DEPOIS */
 .antes-depois{padding:5rem 2rem;background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .section-title{text-align:center;font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.5rem);font-weight:400;margin-bottom:.6rem}
 .section-sub{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:3rem}
@@ -68,8 +59,6 @@ h1 em{font-style:italic;color:var(--gold)}
 .ad-card{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--dark3)}
 .ad-card img{width:100%;display:block;object-fit:cover}
 .ad-label{padding:.75rem 1rem;font-size:.78rem;color:var(--muted);text-align:center;letter-spacing:.5px;text-transform:uppercase;border-top:1px solid var(--border)}
-
-/* PLANOS */
 .planos-section{padding:5rem 2rem}
 .planos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;max-width:960px;margin:2.5rem auto 0}
 .plano{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:1.8rem 1.5rem;text-align:center;position:relative;transition:border-color .2s}
@@ -80,17 +69,14 @@ h1 em{font-style:italic;color:var(--gold)}
 .plano-preco{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold);line-height:1}
 .plano-periodo{font-size:.75rem;color:var(--muted);margin-bottom:.8rem}
 .plano-desc{font-size:.85rem;color:var(--text);margin-bottom:1.2rem;line-height:1.5}
-.plano-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:.75rem;border-radius:8px;cursor:pointer;font-size:.88rem;font-family:'DM Sans',sans-serif;transition:all .2s}
+.plano-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:.75rem;border-radius:8px;cursor:pointer;font-size:.88rem;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;display:block}
 .plano.destaque .plano-btn{background:var(--gold);color:var(--dark);border-color:var(--gold)}
 .plano-btn:hover{border-color:var(--gold);color:var(--gold)}
 .plano.destaque .plano-btn:hover{background:var(--gold-l)}
-
-/* PAINEL DO USUÁRIO */
 #painel{display:none;min-height:100vh;padding:2rem}
-.painel-header{max-width:900px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap}
+.painel-header{max-width:900px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
 .painel-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400}
 .creditos-badge{background:var(--dark3);border:1px solid var(--border);padding:.5rem 1.2rem;border-radius:99px;font-size:.85rem;color:var(--gold)}
-
 .upload-card{max-width:700px;margin:0 auto 2.5rem;background:var(--dark2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
 .upload-zone{padding:2.5rem 2rem;text-align:center;cursor:pointer;border-bottom:1px solid var(--border);transition:background .2s}
 .upload-zone:hover,.upload-zone.drag{background:var(--dark3)}
@@ -116,8 +102,6 @@ h1 em{font-style:italic;color:var(--gold)}
 .btn-main:disabled{background:var(--dark4);color:var(--muted);cursor:not-allowed}
 .btn-outline{width:100%;background:transparent;color:var(--gold);border:1px solid var(--gold);padding:.95rem;border-radius:8px;font-size:.95rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
 .btn-outline:hover{background:rgba(201,168,76,.1)}
-
-/* HISTÓRICO */
 .historico{max-width:700px;margin:0 auto}
 .historico h3{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;margin-bottom:1rem}
 .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
@@ -128,12 +112,10 @@ h1 em{font-style:italic;color:var(--gold)}
 .hist-dl{font-size:.72rem;color:var(--gold);text-decoration:none;border:1px solid var(--border);padding:.2rem .5rem;border-radius:4px}
 .hist-dl:hover{border-color:var(--gold)}
 .hist-vazio{color:var(--muted);font-size:.88rem;text-align:center;padding:2rem;background:var(--dark2);border:1px dashed var(--border);border-radius:10px}
-
-/* PLANOS MODAL */
 #planosArea{display:none;padding:1.5rem;border-bottom:1px solid var(--border);background:var(--dark3)}
 .planos-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-bottom:1rem}
-.plano-mini{background:var(--dark2);border:1px solid var(--border);border-radius:10px;padding:.9rem;text-align:center;cursor:pointer;transition:all .2s}
-.plano-mini:hover,.plano-mini.selected{border-color:var(--gold)}
+.plano-mini{background:var(--dark2);border:1px solid var(--border);border-radius:10px;padding:.9rem;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
+.plano-mini:hover{border-color:var(--gold)}
 .plano-mini.destaque-mini{border-color:var(--gold-d)}
 .pm-badge{font-size:.62rem;background:var(--gold);color:var(--dark);padding:.15rem .5rem;border-radius:99px;display:inline-block;margin-bottom:.3rem}
 .pm-nome{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
@@ -141,13 +123,10 @@ h1 em{font-style:italic;color:var(--gold)}
 .pm-imgs{font-size:.7rem;color:var(--muted)}
 .contato-info{background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:.9rem;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.7}
 .contato-info strong{color:var(--gold);display:block;font-size:.9rem;margin-bottom:.3rem}
-
-/* STATS */
 .stats{display:flex;justify-content:center;gap:3rem;padding:3.5rem 2rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold)}
 .stat-label{font-size:.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
 footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border)}
-
 @media(max-width:640px){
   nav{padding:.8rem 1rem}
   .hero{padding:3.5rem 1rem 2rem}
@@ -156,7 +135,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
   .stats{gap:1.5rem;flex-direction:column;align-items:center;text-align:center}
   .planos-mini{grid-template-columns:1fr 1fr}
   #painel{padding:1rem}
-  .painel-header{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .painel-header{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
@@ -174,7 +153,6 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
   </div>
 </nav>
 
-<!-- OVERLAY LOGIN -->
 <div class="overlay" id="ovLogin">
   <div class="modal">
     <button class="modal-close" onclick="fecharOverlay('ovLogin')">✕</button>
@@ -184,26 +162,24 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
     <div class="field"><label>Senha</label><input type="password" id="loginSenha" placeholder="••••••" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
     <button class="btn-gold" id="btnLogin" onclick="fazerLogin()">Entrar</button>
     <div id="msgLogin" class="msg" style="display:none"></div>
-    <div class="modal-switch">Não tem conta? <a onclick="trocarOverlay('ovLogin','ovCadastro')">Cadastre-se grátis</a></div>
+    <div class="modal-switch">Não tem conta? <a onclick="trocarOverlay('ovLogin','ovCadastro')">Cadastre-se</a></div>
   </div>
 </div>
 
-<!-- OVERLAY CADASTRO -->
 <div class="overlay" id="ovCadastro">
   <div class="modal">
     <button class="modal-close" onclick="fecharOverlay('ovCadastro')">✕</button>
-    <h3>Criar conta grátis</h3>
+    <h3>Criar conta</h3>
     <p class="modal-sub">Crie sua conta para restaurar suas fotos com IA.</p>
     <div class="field"><label>Email</label><input type="email" id="cadEmail" placeholder="seu@email.com"></div>
     <div class="field"><label>Senha</label><input type="password" id="cadSenha" placeholder="mínimo 6 caracteres"></div>
     <div class="field"><label>Confirmar senha</label><input type="password" id="cadSenha2" placeholder="repita a senha" onkeydown="if(event.key==='Enter')fazerCadastro()"></div>
-    <button class="btn-gold" id="btnCad" onclick="fazerCadastro()">Criar conta e restaurar</button>
+    <button class="btn-gold" id="btnCad" onclick="fazerCadastro()">Criar conta</button>
     <div id="msgCad" class="msg" style="display:none"></div>
     <div class="modal-switch">Já tem conta? <a onclick="trocarOverlay('ovCadastro','ovLogin')">Entrar</a></div>
   </div>
 </div>
 
-<!-- LANDING PAGE -->
 <div id="landing">
   <section class="hero">
     <div class="badge">Restauração Profissional com IA</div>
@@ -217,7 +193,6 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
     </div>
     <div class="urgencia">⚠️ Oferta promocional disponível por tempo limitado</div><br>
     <button class="btn-cta" onclick="iniciarJornada()">Restaurar minhas fotos agora</button>
-    
   </section>
 
   <section class="antes-depois">
@@ -248,14 +223,14 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
         <div class="plano-preco">R$2,90</div>
         <div class="plano-periodo">1 restauração</div>
         <div class="plano-desc">Experimente e veja o resultado antes de investir mais.</div>
-        <button class="plano-btn" onclick="iniciarJornada()">Começar</button>
+        <a href="https://pay.wiapy.com/bvAG7JAWUL" target="_blank" class="plano-btn">Começar agora</a>
       </div>
       <div class="plano">
         <div class="plano-nome">Básico</div>
         <div class="plano-preco">R$9,90</div>
         <div class="plano-periodo">5 restaurações</div>
         <div class="plano-desc">Ideal para restaurar fotos da família.</div>
-        <button class="plano-btn" onclick="iniciarJornada()">Começar</button>
+        <a href="LINK_BASICO" target="_blank" class="plano-btn">Começar agora</a>
       </div>
       <div class="plano destaque">
         <div class="plano-badge">⭐ MAIS VENDIDO</div>
@@ -263,7 +238,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
         <div class="plano-preco">R$17,90</div>
         <div class="plano-periodo">10 restaurações</div>
         <div class="plano-desc">O favorito dos nossos clientes. Melhor custo-benefício.</div>
-        <button class="plano-btn" onclick="iniciarJornada()">Escolher este</button>
+        <a href="LINK_ECONOMICO" target="_blank" class="plano-btn">Escolher este</a>
       </div>
       <div class="plano">
         <div class="plano-badge" style="background:var(--dark4);color:var(--gold)">💎 MELHOR CUSTO</div>
@@ -271,7 +246,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
         <div class="plano-preco">R$29,90</div>
         <div class="plano-periodo">20 restaurações</div>
         <div class="plano-desc">Para quem tem um álbum inteiro para restaurar.</div>
-        <button class="plano-btn" onclick="iniciarJornada()">Escolher este</button>
+        <a href="LINK_FAMILIA" target="_blank" class="plano-btn">Escolher este</a>
       </div>
     </div>
   </section>
@@ -285,7 +260,6 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
   <footer>© 2025 Restaures · Todos os direitos reservados</footer>
 </div>
 
-<!-- PAINEL DO USUÁRIO -->
 <div id="painel">
   <div class="painel-header">
     <div>
@@ -302,17 +276,14 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
       <p>ou clique para selecionar · JPG, PNG até 10MB</p>
       <input type="file" id="fileInput" accept="image/*">
     </div>
-
     <div id="previewArea">
       <div class="result-label">Foto selecionada</div>
       <img id="previewImg" class="preview-img" alt="Preview">
     </div>
-
     <div id="loadingArea">
       <div class="spinner"></div>
       <p>Estamos trabalhando na sua imagem, aguarde.</p>
     </div>
-
     <div id="resultArea">
       <div class="result-grid">
         <div><div class="result-label">Original</div><img id="originalImg" class="result-img" alt="Original"></div>
@@ -324,33 +295,31 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
     <div id="planosArea">
       <div style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:1rem;text-align:center">Adquira créditos para continuar:</div>
       <div class="planos-mini">
-        <div class="plano-mini" onclick="selecionarPlano(this,'teste')">
+        <a class="plano-mini" href="https://pay.wiapy.com/bvAG7JAWUL" target="_blank">
           <div class="pm-nome">Teste</div>
           <div class="pm-preco">R$2,90</div>
           <div class="pm-imgs">1 restauração</div>
-        </div>
-        <div class="plano-mini destaque-mini" onclick="selecionarPlano(this,'basico')">
+        </a>
+        <a class="plano-mini destaque-mini" href="LINK_BASICO" target="_blank">
           <div class="pm-nome">Básico</div>
           <div class="pm-preco">R$9,90</div>
           <div class="pm-imgs">5 restaurações</div>
-        </div>
-        <div class="plano-mini" onclick="selecionarPlano(this,'economico')">
+        </a>
+        <a class="plano-mini" href="LINK_ECONOMICO" target="_blank">
           <div class="pm-badge">⭐ MAIS VENDIDO</div>
           <div class="pm-nome">Econômico</div>
           <div class="pm-preco">R$17,90</div>
           <div class="pm-imgs">10 restaurações</div>
-        </div>
-        <div class="plano-mini" onclick="selecionarPlano(this,'familia')">
+        </a>
+        <a class="plano-mini" href="LINK_FAMILIA" target="_blank">
           <div class="pm-nome">Família</div>
           <div class="pm-preco">R$29,90</div>
           <div class="pm-imgs">20 restaurações</div>
-        </div>
+        </a>
       </div>
       <div class="contato-info">
-        <strong>Como adquirir créditos:</strong>
-        Escolha seu plano e envie o comprovante para:<br>
-        <strong style="color:var(--gold-l)">WhatsApp: (51) 99209-5826</strong><br>
-        Seus créditos serão liberados em minutos!
+        <strong>Após o pagamento</strong>
+        Seus créditos serão liberados automaticamente em instantes!
       </div>
     </div>
 
@@ -364,22 +333,19 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
 </div>
 
 <script>
-// ── Estado ────────────────────────────────────────
-let TOKEN   = localStorage.getItem('restaures_jwt');
+let TOKEN = localStorage.getItem('restaures_jwt');
 let USUARIO = null;
 let selectedFile = null;
-let historico = JSON.parse(localStorage.getItem('restaures_historico') || '[]');
 
-// ── Init ──────────────────────────────────────────
 window.addEventListener('load', async () => {
   if (TOKEN) await carregarUsuario();
-  else mostrarLanding(false);
+  else mostrarLanding();
 });
 
 async function carregarUsuario() {
   try {
     const res = await fetch('/api/usuario', { headers: { Authorization: `Bearer ${TOKEN}` } });
-    USUARIO   = await res.json();
+    USUARIO = await res.json();
     if (USUARIO.erro) { sair(); return; }
     mostrarLogado();
   } catch { sair(); }
@@ -397,7 +363,7 @@ function mostrarLogado() {
   mostrarPainel();
 }
 
-function mostrarLanding(logado) {
+function mostrarLanding() {
   document.getElementById('landing').style.display = 'block';
   document.getElementById('painel').style.display  = 'none';
 }
@@ -412,15 +378,12 @@ function mostrarPainel() {
 
 function voltarHome() {
   if (USUARIO) mostrarPainel();
-  else {
-    document.getElementById('landing').style.display = 'block';
-    document.getElementById('painel').style.display  = 'none';
-  }
+  else mostrarLanding();
 }
 
 function atualizarCreditos(n) {
-  document.getElementById('creditosNum').textContent   = n;
-  document.getElementById('navCreditos').textContent   = `${n} crédito(s)`;
+  document.getElementById('creditosNum').textContent  = n;
+  document.getElementById('navCreditos').textContent  = `${n} crédito(s)`;
   if (USUARIO) USUARIO.creditos = n;
 }
 
@@ -430,7 +393,7 @@ function renderAcoes() {
   if (USUARIO.creditos > 0) {
     area.innerHTML = `<button class="btn-main" id="btnRestaurar" disabled>Selecione uma foto para restaurar</button>`;
   } else {
-    area.innerHTML = `<button class="btn-outline" onclick="mostrarPlanos()">Ver planos de créditos</button>`;
+    area.innerHTML = `<button class="btn-outline" onclick="mostrarPlanos()">Comprar créditos para restaurar</button>`;
   }
 }
 
@@ -460,7 +423,6 @@ function salvarHistorico(url) {
   renderHistorico();
 }
 
-// ── Upload ────────────────────────────────────────
 const uploadZone = document.getElementById('uploadZone');
 const fileInput  = document.getElementById('fileInput');
 uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
@@ -472,27 +434,19 @@ fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.
 function handleFile(file) {
   selectedFile = file;
   document.getElementById('previewImg').src = URL.createObjectURL(file);
-  document.getElementById('previewArea').style.display  = 'block';
-  document.getElementById('resultArea').style.display   = 'none';
-  document.getElementById('planosArea').style.display   = 'none';
-
+  document.getElementById('previewArea').style.display = 'block';
+  document.getElementById('resultArea').style.display  = 'none';
+  document.getElementById('planosArea').style.display  = 'none';
   if (USUARIO.creditos > 0) {
-    const area = document.getElementById('cardActions');
-    area.innerHTML = `<button class="btn-main" id="btnRestaurar" onclick="iniciarRestauracao()">Restaurar foto ✦</button>`;
+    document.getElementById('cardActions').innerHTML = `<button class="btn-main" id="btnRestaurar" onclick="iniciarRestauracao()">Restaurar foto ✦</button>`;
   } else mostrarPlanos();
 }
 
 function mostrarPlanos() {
   document.getElementById('planosArea').style.display = 'block';
-  document.getElementById('cardActions').innerHTML    = `<button class="btn-main" disabled>Aguardando créditos</button>`;
+  document.getElementById('cardActions').innerHTML    = `<button class="btn-main" onclick="mostrarPlanos()">Comprar créditos para restaurar</button>`;
 }
 
-function selecionarPlano(el, plano) {
-  document.querySelectorAll('.plano-mini').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-// ── Restauração ───────────────────────────────────
 async function iniciarRestauracao() {
   if (!selectedFile || !TOKEN) return;
   const btn = document.getElementById('btnRestaurar');
@@ -500,7 +454,6 @@ async function iniciarRestauracao() {
   document.getElementById('loadingArea').style.display = 'block';
   document.getElementById('previewArea').style.display = 'none';
   document.getElementById('resultArea').style.display  = 'none';
-
   try {
     const base64 = await fileToBase64(selectedFile);
     const res    = await fetch('/api/restaurar', {
@@ -510,7 +463,6 @@ async function iniciarRestauracao() {
     });
     const data = await res.json();
     document.getElementById('loadingArea').style.display = 'none';
-
     if (data.sucesso) {
       document.getElementById('originalImg').src  = URL.createObjectURL(selectedFile);
       document.getElementById('restoredImg').src  = data.imageUrl;
@@ -535,27 +487,20 @@ async function iniciarRestauracao() {
   }
 }
 
-// ── Auth ──────────────────────────────────────────
 function abrirOverlay(id) { document.getElementById(id).classList.add('active'); }
 function fecharOverlay(id) { document.getElementById(id).classList.remove('active'); }
 function trocarOverlay(f, a) { fecharOverlay(f); abrirOverlay(a); }
-
-function iniciarJornada() {
-  if (TOKEN && USUARIO) mostrarPainel();
-  else abrirOverlay('ovCadastro');
-}
+function iniciarJornada() { if (TOKEN && USUARIO) mostrarPainel(); else abrirOverlay('ovCadastro'); }
 
 async function fazerLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const senha = document.getElementById('loginSenha').value;
   const msg   = document.getElementById('msgLogin');
   if (!email || !senha) { showMsg(msg, 'Preencha todos os campos.', 'err'); return; }
-
   document.getElementById('btnLogin').disabled = true;
   const res  = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, senha }) });
   const data = await res.json();
   document.getElementById('btnLogin').disabled = false;
-
   if (data.sucesso) {
     TOKEN = data.token; localStorage.setItem('restaures_jwt', TOKEN);
     USUARIO = { email, creditos: data.creditos };
@@ -571,12 +516,10 @@ async function fazerCadastro() {
   if (!email || !senha) { showMsg(msg, 'Preencha todos os campos.', 'err'); return; }
   if (senha !== senha2) { showMsg(msg, 'As senhas não coincidem.', 'err'); return; }
   if (senha.length < 6) { showMsg(msg, 'Senha muito curta (mín. 6 caracteres).', 'err'); return; }
-
   document.getElementById('btnCad').disabled = true;
   const res  = await fetch('/api/auth/cadastro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, senha }) });
   const data = await res.json();
   document.getElementById('btnCad').disabled = false;
-
   if (data.sucesso) {
     TOKEN = data.token; localStorage.setItem('restaures_jwt', TOKEN);
     USUARIO = { email, creditos: data.creditos };
@@ -593,7 +536,7 @@ function sair() {
   document.getElementById('btnMeuPainel').style.display = 'none';
   document.getElementById('navEmail').style.display     = 'none';
   document.getElementById('navCreditos').style.display  = 'none';
-  mostrarLanding(false);
+  mostrarLanding();
 }
 
 function showMsg(el, txt, tipo) {
