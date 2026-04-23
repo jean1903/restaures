@@ -1,552 +1,239 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Restaures — Recupere Fotos Antigas com IA</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-:root{--gold:#C9A84C;--gold-l:#E8C97A;--gold-d:#9A7A32;--dark:#080808;--dark2:#0F0F0F;--dark3:#181818;--dark4:#222;--text:#F0EDE8;--muted:#888;--border:rgba(201,168,76,0.18);--green:#4CAF50}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-nav{padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(8,8,8,0.97);backdrop-filter:blur(12px);z-index:200}
-.logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;text-decoration:none}
-.nav-right{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
-#navCreditos{font-size:.75rem;color:var(--gold);border:1px solid var(--border);padding:.25rem .75rem;border-radius:99px;display:none;white-space:nowrap}
-#navEmail{font-size:.75rem;color:var(--muted);display:none;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.btn-nav{background:none;border:1px solid var(--border);color:var(--text);padding:.35rem .9rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap}
-.btn-nav:hover{border-color:var(--gold);color:var(--gold)}
-.btn-nav.gold{background:var(--gold);color:var(--dark);border-color:var(--gold)}
-.btn-nav.gold:hover{background:var(--gold-l)}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999;align-items:center;justify-content:center;padding:1rem}
-.overlay.active{display:flex}
-.modal{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:420px;position:relative;animation:fadeUp .25s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.modal h3{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:.4rem}
-.modal-sub{color:var(--muted);font-size:.83rem;margin-bottom:1.4rem;line-height:1.6}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:.2rem .4rem;border-radius:4px;transition:color .2s}
-.modal-close:hover{color:var(--text)}
-.field{margin-bottom:.9rem}
-.field label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:.35rem;letter-spacing:.5px;text-transform:uppercase}
-.field input{width:100%;background:var(--dark3);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem;border-radius:8px;font-size:.9rem;font-family:'DM Sans',sans-serif;transition:border .2s}
-.field input:focus{outline:none;border-color:var(--gold)}
-.btn-gold{width:100%;background:var(--gold);color:var(--dark);border:none;padding:.9rem;border-radius:8px;font-size:.95rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;margin-top:.4rem}
-.btn-gold:hover{background:var(--gold-l);transform:translateY(-1px)}
-.btn-gold:disabled{background:var(--dark4);color:var(--muted);cursor:not-allowed;transform:none}
-.modal-switch{text-align:center;margin-top:1rem;font-size:.82rem;color:var(--muted)}
-.modal-switch a{color:var(--gold);cursor:pointer}
-.msg{font-size:.82rem;margin-top:.7rem;text-align:center;padding:.5rem;border-radius:6px}
-.msg.err{color:#ff6b6b;background:rgba(255,107,107,.1)}
-.msg.ok{color:#69db7c;background:rgba(105,219,124,.1)}
-.hero{padding:5rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(201,168,76,.07) 0%,transparent 70%);pointer-events:none}
-.badge{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--border);color:var(--gold);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;padding:.3rem 1rem;border-radius:99px;margin-bottom:1.8rem}
-.badge::before{content:'✦'}
-h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5.5vw,4.8rem);font-weight:400;line-height:1.08;margin-bottom:1.2rem;letter-spacing:-.5px}
-h1 em{font-style:italic;color:var(--gold)}
-.subtitle{color:var(--muted);font-size:1rem;max-width:500px;margin:0 auto 1.5rem;line-height:1.75}
-.beneficios{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;margin-bottom:2.5rem}
-.beneficio{font-size:.82rem;color:var(--text);background:var(--dark3);border:1px solid var(--border);padding:.35rem .9rem;border-radius:99px}
-.beneficio::before{content:'✔ ';color:var(--gold)}
-.urgencia{display:inline-block;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);color:var(--gold-l);font-size:.78rem;padding:.4rem 1.2rem;border-radius:99px;margin-bottom:2rem}
-.btn-cta{display:inline-block;background:var(--gold);color:var(--dark);padding:1rem 2.5rem;border-radius:10px;font-size:1rem;font-weight:500;text-decoration:none;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;margin-bottom:.8rem}
-.btn-cta:hover{background:var(--gold-l);transform:translateY(-2px)}
-.antes-depois{padding:5rem 2rem;background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.section-title{text-align:center;font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.5rem);font-weight:400;margin-bottom:.6rem}
-.section-sub{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:3rem}
-.ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto}
-.ad-card{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--dark3)}
-.ad-card img{width:100%;display:block;object-fit:cover}
-.ad-label{padding:.75rem 1rem;font-size:.78rem;color:var(--muted);text-align:center;letter-spacing:.5px;text-transform:uppercase;border-top:1px solid var(--border)}
-.planos-section{padding:5rem 2rem}
-.planos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;max-width:960px;margin:2.5rem auto 0}
-.plano{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:1.8rem 1.5rem;text-align:center;position:relative;transition:border-color .2s}
-.plano:hover{border-color:var(--gold-d)}
-.plano.destaque{border-color:var(--gold);background:linear-gradient(135deg,var(--dark2),rgba(201,168,76,.05))}
-.plano-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--dark);font-size:.68rem;font-weight:500;padding:.3rem .9rem;border-radius:99px;white-space:nowrap;letter-spacing:.5px}
-.plano-nome{font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
-.plano-preco{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold);line-height:1}
-.plano-periodo{font-size:.75rem;color:var(--muted);margin-bottom:.8rem}
-.plano-desc{font-size:.85rem;color:var(--text);margin-bottom:1.2rem;line-height:1.5}
-.plano-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--text);padding:.75rem;border-radius:8px;cursor:pointer;font-size:.88rem;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;display:block}
-.plano.destaque .plano-btn{background:var(--gold);color:var(--dark);border-color:var(--gold)}
-.plano-btn:hover{border-color:var(--gold);color:var(--gold)}
-.plano.destaque .plano-btn:hover{background:var(--gold-l)}
-#painel{display:none;min-height:100vh;padding:2rem}
-.painel-header{max-width:900px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
-.painel-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:400}
-.creditos-badge{background:var(--dark3);border:1px solid var(--border);padding:.5rem 1.2rem;border-radius:99px;font-size:.85rem;color:var(--gold)}
-.upload-card{max-width:700px;margin:0 auto 2.5rem;background:var(--dark2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.upload-zone{padding:2.5rem 2rem;text-align:center;cursor:pointer;border-bottom:1px solid var(--border);transition:background .2s}
-.upload-zone:hover,.upload-zone.drag{background:var(--dark3)}
-.upload-icon{width:54px;height:54px;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;font-size:1.5rem}
-.upload-zone h3{font-family:'Playfair Display',serif;font-weight:400;font-size:1.1rem;margin-bottom:.35rem}
-.upload-zone p{color:var(--muted);font-size:.8rem}
-#fileInput{display:none}
-#previewArea{display:none;padding:1.2rem;border-bottom:1px solid var(--border)}
-.preview-img,.result-img{width:100%;border-radius:8px;border:1px solid var(--border)}
-.preview-img{max-height:300px;object-fit:contain}
-#loadingArea{display:none;padding:2rem;text-align:center;border-bottom:1px solid var(--border)}
-.spinner{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto .9rem}
-@keyframes spin{to{transform:rotate(360deg)}}
-#loadingArea p{color:var(--muted);font-size:.88rem}
-#resultArea{display:none;padding:1.2rem;border-bottom:1px solid var(--border)}
-.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.result-label{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
-.download-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;background:var(--gold);color:var(--dark);padding:.8rem;border-radius:8px;font-size:.88rem;font-weight:500;text-decoration:none;margin-top:1rem;transition:background .2s}
-.download-btn:hover{background:var(--gold-l)}
-.card-actions{padding:1.2rem}
-.btn-main{width:100%;background:var(--gold);color:var(--dark);border:none;padding:.95rem;border-radius:8px;font-size:.95rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-.btn-main:hover:not(:disabled){background:var(--gold-l);transform:translateY(-1px)}
-.btn-main:disabled{background:var(--dark4);color:var(--muted);cursor:not-allowed}
-.btn-outline{width:100%;background:transparent;color:var(--gold);border:1px solid var(--gold);padding:.95rem;border-radius:8px;font-size:.95rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
-.btn-outline:hover{background:rgba(201,168,76,.1)}
-.historico{max-width:700px;margin:0 auto}
-.historico h3{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;margin-bottom:1rem}
-.hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
-.hist-item{background:var(--dark2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.hist-item img{width:100%;height:130px;object-fit:cover;display:block}
-.hist-item-info{padding:.6rem .8rem;display:flex;justify-content:space-between;align-items:center}
-.hist-data{font-size:.72rem;color:var(--muted)}
-.hist-dl{font-size:.72rem;color:var(--gold);text-decoration:none;border:1px solid var(--border);padding:.2rem .5rem;border-radius:4px}
-.hist-dl:hover{border-color:var(--gold)}
-.hist-vazio{color:var(--muted);font-size:.88rem;text-align:center;padding:2rem;background:var(--dark2);border:1px dashed var(--border);border-radius:10px}
-#planosArea{display:none;padding:1.5rem;border-bottom:1px solid var(--border);background:var(--dark3)}
-.planos-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-bottom:1rem}
-.plano-mini{background:var(--dark2);border:1px solid var(--border);border-radius:10px;padding:.9rem;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block}
-.plano-mini:hover{border-color:var(--gold)}
-.plano-mini.destaque-mini{border-color:var(--gold-d)}
-.pm-badge{font-size:.62rem;background:var(--gold);color:var(--dark);padding:.15rem .5rem;border-radius:99px;display:inline-block;margin-bottom:.3rem}
-.pm-nome{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.pm-preco{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold)}
-.pm-imgs{font-size:.7rem;color:var(--muted)}
-.contato-info{background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:.9rem;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.7}
-.contato-info strong{color:var(--gold);display:block;font-size:.9rem;margin-bottom:.3rem}
-.stats{display:flex;justify-content:center;gap:3rem;padding:3.5rem 2rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold)}
-.stat-label{font-size:.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border)}
-@media(max-width:640px){
-  nav{padding:.8rem 1rem}
-  .hero{padding:3.5rem 1rem 2rem}
-  .antes-depois,.planos-section{padding:3rem 1rem}
-  .result-grid{grid-template-columns:1fr}
-  .stats{gap:1.5rem;flex-direction:column;align-items:center;text-align:center}
-  .planos-mini{grid-template-columns:1fr 1fr}
-  #painel{padding:1rem}
-  .painel-header{flex-direction:column;align-items:flex-start}
+require('dotenv').config();
+const express  = require('express');
+const axios    = require('axios');
+const path     = require('path');
+const FormData = require('form-data');
+const jwt      = require('jsonwebtoken');
+const bcrypt   = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
+const db       = require('./db');
+
+const app = express();
+app.use(express.json({ limit: '15mb' }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+const JWT_SECRET   = process.env.JWT_SECRET   || 'restaures-secret-2025';
+const ADMIN_SECRET = process.env.ADMIN_SECRET  || 'admin123';
+const MP_TOKEN     = process.env.MP_ACCESS_TOKEN;
+
+const PLANOS = {
+  teste:     { nome: 'Plano Teste',     creditos: 1,  preco: 2.90  },
+  basico:    { nome: 'Plano Básico',    creditos: 5,  preco: 9.90  },
+  economico: { nome: 'Plano Econômico', creditos: 10, preco: 17.90 },
+  familia:   { nome: 'Plano Família',   creditos: 20, preco: 29.90 },
+};
+
+const PROMPT = `Professional AI restoration and ultra-high-definition 8K upscale of an old photograph. Enhance all textures, sharpen blurry edges, and recover lost details from the original reference. Remove all noise, film grain, scratches, and dust. Apply vibrant, natural color correction while maintaining the original composition. Crystal clear, photorealistic, and sharp focus. Restore faces with high fidelity. Make it look like a modern high quality photograph.`;
+
+function auth(req, res, next) {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ erro: 'Não autenticado.' });
+  try { req.email = jwt.verify(token, JWT_SECRET).email; next(); }
+  catch { res.status(401).json({ erro: 'Token inválido.' }); }
 }
-</style>
-</head>
-<body>
 
-<nav>
-  <a class="logo" href="#" onclick="voltarHome()">Restaures</a>
-  <div class="nav-right">
-    <span id="navCreditos"></span>
-    <span id="navEmail"></span>
-    <button class="btn-nav" id="btnMeuPainel" style="display:none" onclick="mostrarPainel()">Meu Painel</button>
-    <button class="btn-nav" id="btnNavLogin" onclick="abrirOverlay('ovLogin')">Entrar</button>
-    <button class="btn-nav gold" id="btnNavCad" onclick="abrirOverlay('ovCadastro')">Criar conta</button>
-    <button class="btn-nav" id="btnNavSair" style="display:none" onclick="sair()">Sair</button>
-  </div>
-</nav>
+async function uploadImgBB(base64) {
+  const form = new FormData();
+  form.append('image', base64);
+  const res = await axios.post(
+    `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
+    form, { headers: form.getHeaders(), timeout: 30000 }
+  );
+  return res.data.data.url;
+}
 
-<div class="overlay" id="ovLogin">
-  <div class="modal">
-    <button class="modal-close" onclick="fecharOverlay('ovLogin')">✕</button>
-    <h3>Entrar na conta</h3>
-    <p class="modal-sub">Acesse para restaurar suas fotos com IA.</p>
-    <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="seu@email.com"></div>
-    <div class="field"><label>Senha</label><input type="password" id="loginSenha" placeholder="••••••" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
-    <button class="btn-gold" id="btnLogin" onclick="fazerLogin()">Entrar</button>
-    <div id="msgLogin" class="msg" style="display:none"></div>
-    <div class="modal-switch">Não tem conta? <a onclick="trocarOverlay('ovLogin','ovCadastro')">Cadastre-se</a></div>
-  </div>
-</div>
-
-<div class="overlay" id="ovCadastro">
-  <div class="modal">
-    <button class="modal-close" onclick="fecharOverlay('ovCadastro')">✕</button>
-    <h3>Criar conta</h3>
-    <p class="modal-sub">Crie sua conta para restaurar suas fotos com IA.</p>
-    <div class="field"><label>Email</label><input type="email" id="cadEmail" placeholder="seu@email.com"></div>
-    <div class="field"><label>Senha</label><input type="password" id="cadSenha" placeholder="mínimo 6 caracteres"></div>
-    <div class="field"><label>Confirmar senha</label><input type="password" id="cadSenha2" placeholder="repita a senha" onkeydown="if(event.key==='Enter')fazerCadastro()"></div>
-    <button class="btn-gold" id="btnCad" onclick="fazerCadastro()">Criar conta</button>
-    <div id="msgCad" class="msg" style="display:none"></div>
-    <div class="modal-switch">Já tem conta? <a onclick="trocarOverlay('ovCadastro','ovLogin')">Entrar</a></div>
-  </div>
-</div>
-
-<div id="landing">
-  <section class="hero">
-    <div class="badge">Restauração Profissional com IA</div>
-    <h1>Recupere fotos antigas<br>que o tempo quase <em>apagou</em></h1>
-    <p class="subtitle">Transformamos suas fotos antigas em imagens restauradas, nítidas e cheias de vida em poucos segundos.</p>
-    <div class="beneficios">
-      <span class="beneficio">Melhore qualidade de fotos antigas</span>
-      <span class="beneficio">Remova borrões e manchas</span>
-      <span class="beneficio">Reviva memórias importantes</span>
-      <span class="beneficio">Resultado rápido e automático</span>
-    </div>
-    <div class="urgencia">⚠️ Oferta promocional disponível por tempo limitado</div><br>
-    <button class="btn-cta" onclick="iniciarJornada()">Restaurar minhas fotos agora</button>
-  </section>
-
-  <section class="antes-depois">
-    <h2 class="section-title">Veja a diferença na prática</h2>
-    <p class="section-sub">Antes → foto antiga, borrada, apagada &nbsp;·&nbsp; Depois → imagem restaurada, nítida e com vida</p>
-    <div class="ad-grid">
-      <div class="ad-card">
-        <img src="/antes-depois-1.png" alt="Antes e depois restauração de família">
-        <div class="ad-label">Colorização e restauração de família</div>
-      </div>
-      <div class="ad-card">
-        <img src="/antes-depois-2.png" alt="Antes e depois restauração de crianças">
-        <div class="ad-label">Remoção de danos e arranhões</div>
-      </div>
-      <div class="ad-card">
-        <img src="/antes-depois-3.png" alt="Antes e depois restauração histórica">
-        <div class="ad-label">Restauração de foto histórica danificada</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="planos-section">
-    <h2 class="section-title">Escolha o plano ideal para você</h2>
-    <p class="section-sub">Sem assinatura. Pague apenas pelo que usar.</p>
-    <div class="planos-grid">
-      <div class="plano">
-        <div class="plano-nome">Teste</div>
-        <div class="plano-preco">R$2,90</div>
-        <div class="plano-periodo">1 restauração</div>
-        <div class="plano-desc">Experimente e veja o resultado antes de investir mais.</div>
-        <a href="https://pay.wiapy.com/bvAG7JAWUL" target="_blank" class="plano-btn">Começar agora</a>
-      </div>
-      <div class="plano">
-        <div class="plano-nome">Básico</div>
-        <div class="plano-preco">R$9,90</div>
-        <div class="plano-periodo">5 restaurações</div>
-        <div class="plano-desc">Ideal para restaurar fotos da família.</div>
-        <a href="LINK_BASICO" target="_blank" class="plano-btn">Começar agora</a>
-      </div>
-      <div class="plano destaque">
-        <div class="plano-badge">⭐ MAIS VENDIDO</div>
-        <div class="plano-nome">Econômico</div>
-        <div class="plano-preco">R$17,90</div>
-        <div class="plano-periodo">10 restaurações</div>
-        <div class="plano-desc">O favorito dos nossos clientes. Melhor custo-benefício.</div>
-        <a href="LINK_ECONOMICO" target="_blank" class="plano-btn">Escolher este</a>
-      </div>
-      <div class="plano">
-        <div class="plano-badge" style="background:var(--dark4);color:var(--gold)">💎 MELHOR CUSTO</div>
-        <div class="plano-nome">Família</div>
-        <div class="plano-preco">R$29,90</div>
-        <div class="plano-periodo">20 restaurações</div>
-        <div class="plano-desc">Para quem tem um álbum inteiro para restaurar.</div>
-        <a href="LINK_FAMILIA" target="_blank" class="plano-btn">Escolher este</a>
-      </div>
-    </div>
-  </section>
-
-  <div class="stats">
-    <div><div class="stat-num">8K</div><div class="stat-label">Ultra HD</div></div>
-    <div><div class="stat-num">99%</div><div class="stat-label">Satisfação</div></div>
-    <div><div class="stat-num">IA</div><div class="stat-label">Avançada</div></div>
-  </div>
-
-  <footer>© 2025 Restaures · Todos os direitos reservados</footer>
-</div>
-
-<div id="painel">
-  <div class="painel-header">
-    <div>
-      <h2>Meu Painel</h2>
-      <div style="color:var(--muted);font-size:.83rem;margin-top:.2rem" id="painelEmail"></div>
-    </div>
-    <div class="creditos-badge">✦ <span id="creditosNum">0</span> crédito(s)</div>
-  </div>
-
-  <div class="upload-card">
-    <div class="upload-zone" id="uploadZone">
-      <div class="upload-icon">📷</div>
-      <h3>Arraste sua foto aqui</h3>
-      <p>ou clique para selecionar · JPG, PNG até 10MB</p>
-      <input type="file" id="fileInput" accept="image/*">
-    </div>
-    <div id="previewArea">
-      <div class="result-label">Foto selecionada</div>
-      <img id="previewImg" class="preview-img" alt="Preview">
-    </div>
-    <div id="loadingArea">
-      <div class="spinner"></div>
-      <p>Estamos trabalhando na sua imagem, aguarde.</p>
-    </div>
-    <div id="resultArea">
-      <div class="result-grid">
-        <div><div class="result-label">Original</div><img id="originalImg" class="result-img" alt="Original"></div>
-        <div><div class="result-label">Restaurada ✦</div><img id="restoredImg" class="result-img" alt="Restaurada"></div>
-      </div>
-      <a id="downloadBtn" href="#" class="download-btn" download="restaurada.png">⬇ Baixar foto restaurada</a>
-    </div>
-
-    <div id="planosArea">
-      <div style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:1rem;text-align:center">Adquira créditos para continuar:</div>
-      <div class="planos-mini">
-        <a class="plano-mini" href="https://pay.wiapy.com/bvAG7JAWUL" target="_blank">
-          <div class="pm-nome">Teste</div>
-          <div class="pm-preco">R$2,90</div>
-          <div class="pm-imgs">1 restauração</div>
-        </a>
-        <a class="plano-mini destaque-mini" href="LINK_BASICO" target="_blank">
-          <div class="pm-nome">Básico</div>
-          <div class="pm-preco">R$9,90</div>
-          <div class="pm-imgs">5 restaurações</div>
-        </a>
-        <a class="plano-mini" href="LINK_ECONOMICO" target="_blank">
-          <div class="pm-badge">⭐ MAIS VENDIDO</div>
-          <div class="pm-nome">Econômico</div>
-          <div class="pm-preco">R$17,90</div>
-          <div class="pm-imgs">10 restaurações</div>
-        </a>
-        <a class="plano-mini" href="LINK_FAMILIA" target="_blank">
-          <div class="pm-nome">Família</div>
-          <div class="pm-preco">R$29,90</div>
-          <div class="pm-imgs">20 restaurações</div>
-        </a>
-      </div>
-      <div class="contato-info">
-        <strong>Após o pagamento</strong>
-        Seus créditos serão liberados automaticamente em instantes!
-      </div>
-    </div>
-
-    <div class="card-actions" id="cardActions"></div>
-  </div>
-
-  <div class="historico" id="historicoArea">
-    <h3>Minhas restaurações</h3>
-    <div class="hist-grid" id="histGrid"></div>
-  </div>
-</div>
-
-<script>
-let TOKEN = localStorage.getItem('restaures_jwt');
-let USUARIO = null;
-let selectedFile = null;
-
-window.addEventListener('load', async () => {
-  if (TOKEN) await carregarUsuario();
-  else mostrarLanding();
+// ══════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════
+app.post('/api/auth/cadastro', async (req, res) => {
+  const { email, senha } = req.body;
+  if (!email || !email.includes('@')) return res.json({ erro: 'Email inválido.' });
+  if (!senha || senha.length < 6) return res.json({ erro: 'Senha deve ter mínimo 6 caracteres.' });
+  if (db.getUsuario(email)) return res.json({ erro: 'Email já cadastrado.' });
+  const hash = await bcrypt.hash(senha, 10);
+  db.criarUsuario(uuidv4(), email, hash);
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '30d' });
+  res.json({ sucesso: true, token, creditos: 0 });
 });
 
-async function carregarUsuario() {
+app.post('/api/auth/login', async (req, res) => {
+  const { email, senha } = req.body;
+  if (!email || !senha) return res.json({ erro: 'Preencha email e senha.' });
+  const usuario = db.getUsuario(email);
+  if (!usuario) return res.json({ erro: 'Email não encontrado.' });
+  const ok = await bcrypt.compare(senha, usuario.senha);
+  if (!ok) return res.json({ erro: 'Senha incorreta.' });
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '30d' });
+  res.json({ sucesso: true, token, creditos: usuario.creditos });
+});
+
+app.get('/api/usuario', auth, (req, res) => {
+  const u = db.getUsuario(req.email);
+  res.json(u ? { email: u.email, creditos: u.creditos } : { email: req.email, creditos: 0 });
+});
+
+// ══════════════════════════════════════════════════
+//  MERCADO PAGO — criar pagamento PIX
+// ══════════════════════════════════════════════════
+app.post('/api/pagamento/criar', auth, async (req, res) => {
+  const { plano } = req.body;
+  const p = PLANOS[plano];
+  if (!p) return res.json({ erro: 'Plano inválido.' });
+
   try {
-    const res = await fetch('/api/usuario', { headers: { Authorization: `Bearer ${TOKEN}` } });
-    USUARIO = await res.json();
-    if (USUARIO.erro) { sair(); return; }
-    mostrarLogado();
-  } catch { sair(); }
-}
+    const response = await axios.post(
+      'https://api.mercadopago.com/v1/payments',
+      {
+        transaction_amount: p.preco,
+        description: p.nome,
+        payment_method_id: 'pix',
+        payer: { email: req.email },
+        metadata: { email: req.email, plano, creditos: p.creditos },
+        notification_url: `${process.env.BASE_URL}/api/pagamento/webhook`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${MP_TOKEN}`,
+          'Content-Type': 'application/json',
+          'X-Idempotency-Key': uuidv4(),
+        },
+      }
+    );
 
-function mostrarLogado() {
-  document.getElementById('btnNavLogin').style.display  = 'none';
-  document.getElementById('btnNavCad').style.display    = 'none';
-  document.getElementById('btnNavSair').style.display   = 'block';
-  document.getElementById('btnMeuPainel').style.display = 'block';
-  document.getElementById('navEmail').style.display     = 'block';
-  document.getElementById('navCreditos').style.display  = 'block';
-  document.getElementById('navEmail').textContent       = USUARIO.email;
-  atualizarCreditos(USUARIO.creditos);
-  mostrarPainel();
-}
-
-function mostrarLanding() {
-  document.getElementById('landing').style.display = 'block';
-  document.getElementById('painel').style.display  = 'none';
-}
-
-function mostrarPainel() {
-  document.getElementById('landing').style.display = 'none';
-  document.getElementById('painel').style.display  = 'block';
-  document.getElementById('painelEmail').textContent = USUARIO.email;
-  renderAcoes();
-  renderHistorico();
-}
-
-function voltarHome() {
-  if (USUARIO) mostrarPainel();
-  else mostrarLanding();
-}
-
-function atualizarCreditos(n) {
-  document.getElementById('creditosNum').textContent  = n;
-  document.getElementById('navCreditos').textContent  = `${n} crédito(s)`;
-  if (USUARIO) USUARIO.creditos = n;
-}
-
-function renderAcoes() {
-  const area = document.getElementById('cardActions');
-  if (!USUARIO) return;
-  if (USUARIO.creditos > 0) {
-    area.innerHTML = `<button class="btn-main" id="btnRestaurar" disabled>Selecione uma foto para restaurar</button>`;
-  } else {
-    area.innerHTML = `<button class="btn-outline" onclick="mostrarPlanos()">Comprar créditos para restaurar</button>`;
-  }
-}
-
-function renderHistorico() {
-  const grid  = document.getElementById('histGrid');
-  const local = JSON.parse(localStorage.getItem('restaures_historico_' + USUARIO?.email) || '[]');
-  if (!local.length) {
-    grid.innerHTML = '<div class="hist-vazio" style="grid-column:1/-1">Suas restaurações aparecerão aqui após processar a primeira foto.</div>';
-    return;
-  }
-  grid.innerHTML = local.slice().reverse().map(h => `
-    <div class="hist-item">
-      <img src="${h.url}" alt="Restauração">
-      <div class="hist-item-info">
-        <span class="hist-data">${h.data}</span>
-        <a href="${h.url}" download="restaurada.png" class="hist-dl">⬇ Baixar</a>
-      </div>
-    </div>
-  `).join('');
-}
-
-function salvarHistorico(url) {
-  const key   = 'restaures_historico_' + USUARIO?.email;
-  const local = JSON.parse(localStorage.getItem(key) || '[]');
-  local.push({ url, data: new Date().toLocaleDateString('pt-BR') });
-  localStorage.setItem(key, JSON.stringify(local.slice(-50)));
-  renderHistorico();
-}
-
-const uploadZone = document.getElementById('uploadZone');
-const fileInput  = document.getElementById('fileInput');
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
-uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
-uploadZone.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
-
-function handleFile(file) {
-  selectedFile = file;
-  document.getElementById('previewImg').src = URL.createObjectURL(file);
-  document.getElementById('previewArea').style.display = 'block';
-  document.getElementById('resultArea').style.display  = 'none';
-  document.getElementById('planosArea').style.display  = 'none';
-  if (USUARIO.creditos > 0) {
-    document.getElementById('cardActions').innerHTML = `<button class="btn-main" id="btnRestaurar" onclick="iniciarRestauracao()">Restaurar foto ✦</button>`;
-  } else mostrarPlanos();
-}
-
-function mostrarPlanos() {
-  document.getElementById('planosArea').style.display = 'block';
-  document.getElementById('cardActions').innerHTML    = `<button class="btn-main" onclick="mostrarPlanos()">Comprar créditos para restaurar</button>`;
-}
-
-async function iniciarRestauracao() {
-  if (!selectedFile || !TOKEN) return;
-  const btn = document.getElementById('btnRestaurar');
-  if (btn) btn.disabled = true;
-  document.getElementById('loadingArea').style.display = 'block';
-  document.getElementById('previewArea').style.display = 'none';
-  document.getElementById('resultArea').style.display  = 'none';
-  try {
-    const base64 = await fileToBase64(selectedFile);
-    const res    = await fetch('/api/restaurar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
-      body: JSON.stringify({ image: base64 }),
+    const pix = response.data.point_of_interaction?.transaction_data;
+    res.json({
+      sucesso: true,
+      pixCopiaECola: pix?.qr_code,
+      qrCodeBase64: pix?.qr_code_base64,
+      paymentId: response.data.id,
+      valor: p.preco,
+      plano: p.nome,
+      creditos: p.creditos,
     });
-    const data = await res.json();
-    document.getElementById('loadingArea').style.display = 'none';
-    if (data.sucesso) {
-      document.getElementById('originalImg').src  = URL.createObjectURL(selectedFile);
-      document.getElementById('restoredImg').src  = data.imageUrl;
-      document.getElementById('downloadBtn').href = data.imageUrl;
-      document.getElementById('resultArea').style.display = 'block';
-      atualizarCreditos(data.creditos);
-      salvarHistorico(data.imageUrl);
-      if (data.creditos > 0) renderAcoes();
-      else mostrarPlanos();
-    } else if (data.semCreditos) {
-      mostrarPlanos();
-      document.getElementById('previewArea').style.display = 'block';
-    } else {
-      alert('Erro: ' + data.erro);
-      document.getElementById('previewArea').style.display = 'block';
-      renderAcoes();
-    }
-  } catch {
-    document.getElementById('loadingArea').style.display = 'none';
-    document.getElementById('previewArea').style.display = 'block';
-    alert('Erro de conexão. Tente novamente.');
+
+  } catch (err) {
+    console.error('Erro MP:', err.response?.data || err.message);
+    res.json({ erro: 'Erro ao gerar PIX.' });
   }
-}
+});
 
-function abrirOverlay(id) { document.getElementById(id).classList.add('active'); }
-function fecharOverlay(id) { document.getElementById(id).classList.remove('active'); }
-function trocarOverlay(f, a) { fecharOverlay(f); abrirOverlay(a); }
-function iniciarJornada() { if (TOKEN && USUARIO) mostrarPainel(); else abrirOverlay('ovCadastro'); }
+// Verificar status do pagamento
+app.get('/api/pagamento/status/:id', auth, async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${req.params.id}`,
+      { headers: { Authorization: `Bearer ${MP_TOKEN}` } }
+    );
+    const status = response.data.status;
+    if (status === 'approved') {
+      const { email, plano, creditos } = response.data.metadata;
+      const userEmail = email || req.email;
+      const u = db.getUsuario(userEmail);
+      if (u) {
+        const novo = db.adicionarCreditos(userEmail, parseInt(creditos));
+        return res.json({ sucesso: true, status, creditos: novo });
+      }
+    }
+    res.json({ sucesso: false, status });
+  } catch (err) {
+    res.json({ erro: err.message });
+  }
+});
 
-async function fazerLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const senha = document.getElementById('loginSenha').value;
-  const msg   = document.getElementById('msgLogin');
-  if (!email || !senha) { showMsg(msg, 'Preencha todos os campos.', 'err'); return; }
-  document.getElementById('btnLogin').disabled = true;
-  const res  = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, senha }) });
-  const data = await res.json();
-  document.getElementById('btnLogin').disabled = false;
-  if (data.sucesso) {
-    TOKEN = data.token; localStorage.setItem('restaures_jwt', TOKEN);
-    USUARIO = { email, creditos: data.creditos };
-    fecharOverlay('ovLogin'); mostrarLogado();
-  } else showMsg(msg, data.erro, 'err');
-}
+// Webhook Mercado Pago
+app.post('/api/pagamento/webhook', async (req, res) => {
+  try {
+    const { type, data } = req.body;
+    console.log('Webhook MP:', type, data?.id);
 
-async function fazerCadastro() {
-  const email  = document.getElementById('cadEmail').value.trim();
-  const senha  = document.getElementById('cadSenha').value;
-  const senha2 = document.getElementById('cadSenha2').value;
-  const msg    = document.getElementById('msgCad');
-  if (!email || !senha) { showMsg(msg, 'Preencha todos os campos.', 'err'); return; }
-  if (senha !== senha2) { showMsg(msg, 'As senhas não coincidem.', 'err'); return; }
-  if (senha.length < 6) { showMsg(msg, 'Senha muito curta (mín. 6 caracteres).', 'err'); return; }
-  document.getElementById('btnCad').disabled = true;
-  const res  = await fetch('/api/auth/cadastro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, senha }) });
-  const data = await res.json();
-  document.getElementById('btnCad').disabled = false;
-  if (data.sucesso) {
-    TOKEN = data.token; localStorage.setItem('restaures_jwt', TOKEN);
-    USUARIO = { email, creditos: data.creditos };
-    fecharOverlay('ovCadastro'); mostrarLogado();
-  } else showMsg(msg, data.erro, 'err');
-}
+    if (type === 'payment' && data?.id) {
+      const response = await axios.get(
+        `https://api.mercadopago.com/v1/payments/${data.id}`,
+        { headers: { Authorization: `Bearer ${MP_TOKEN}` } }
+      );
+      const payment = response.data;
+      console.log('Payment status:', payment.status, '| email:', payment.payer?.email);
 
-function sair() {
-  TOKEN = null; USUARIO = null;
-  localStorage.removeItem('restaures_jwt');
-  document.getElementById('btnNavLogin').style.display  = 'block';
-  document.getElementById('btnNavCad').style.display    = 'block';
-  document.getElementById('btnNavSair').style.display   = 'none';
-  document.getElementById('btnMeuPainel').style.display = 'none';
-  document.getElementById('navEmail').style.display     = 'none';
-  document.getElementById('navCreditos').style.display  = 'none';
-  mostrarLanding();
-}
+      if (payment.status === 'approved') {
+        const email   = payment.metadata?.email || payment.payer?.email;
+        const creditos = parseInt(payment.metadata?.creditos || 0);
+        if (email && creditos > 0) {
+          const u = db.getUsuario(email);
+          if (!u) {
+            const hash = await bcrypt.hash(Math.random().toString(36), 10);
+            db.criarUsuario(uuidv4(), email, hash);
+          }
+          const novo = db.adicionarCreditos(email, creditos);
+          console.log(`+${creditos} créditos para ${email} | Total: ${novo}`);
+        }
+      }
+    }
+    res.sendStatus(200);
+  } catch (err) {
+    console.error('Erro webhook MP:', err.message);
+    res.sendStatus(200);
+  }
+});
 
-function showMsg(el, txt, tipo) {
-  el.textContent = txt; el.className = 'msg ' + tipo; el.style.display = 'block';
-  setTimeout(() => el.style.display = 'none', 5000);
-}
+// ══════════════════════════════════════════════════
+//  ADMIN
+// ══════════════════════════════════════════════════
+app.post('/api/admin/creditos', (req, res) => {
+  const { secret, email, creditos } = req.body;
+  if (secret !== ADMIN_SECRET) return res.status(403).json({ erro: 'Sem permissão.' });
+  const u = db.getUsuario(email);
+  if (!u) return res.json({ erro: 'Usuário não encontrado.' });
+  const novo = db.adicionarCreditos(email, creditos);
+  res.json({ sucesso: true, creditos: novo });
+});
 
-function fileToBase64(file) {
-  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(file); });
-}
-</script>
-</body>
-</html>
+// ══════════════════════════════════════════════════
+//  RESTAURAÇÃO
+// ══════════════════════════════════════════════════
+app.post('/api/restaurar', auth, async (req, res) => {
+  const u = db.getUsuario(req.email);
+  if (!u || u.creditos < 1) return res.json({ sucesso: false, semCreditos: true, erro: 'Sem créditos.' });
+
+  try {
+    const { image } = req.body;
+    if (!image) return res.json({ sucesso: false, erro: 'Imagem não recebida.' });
+    const base64   = image.replace(/^data:image\/\w+;base64,/, '');
+    const imageUrl = await uploadImgBB(base64);
+    console.log('ImgBB:', imageUrl);
+
+    const createRes = await axios.post(
+      'https://api.kie.ai/api/v1/jobs/createTask',
+      { model: 'nano-banana-2', input: { prompt: PROMPT, image_input: [imageUrl], aspect_ratio: 'auto', resolution: '1K', output_format: 'png' } },
+      { headers: { Authorization: `Bearer ${process.env.KIE_API_KEY}`, 'Content-Type': 'application/json' }, timeout: 30000 }
+    );
+
+    const taskId = createRes.data?.data?.taskId;
+    if (!taskId) return res.json({ sucesso: false, erro: 'Erro ao criar tarefa.' });
+
+    for (let i = 0; i < 30; i++) {
+      await new Promise(r => setTimeout(r, 5000));
+      const poll  = await axios.get(`https://api.kie.ai/api/v1/jobs/recordInfo?taskId=${taskId}`, { headers: { Authorization: `Bearer ${process.env.KIE_API_KEY}` } });
+      const data  = poll.data?.data;
+      const state = data?.state;
+      console.log(`Status (${i+1}): ${state}`);
+      if (state === 'success' || state === 'SUCCESS') {
+        try {
+          const url = JSON.parse(data.resultJson)?.resultUrls?.[0];
+          if (url) {
+            const novos = db.descontarCredito(req.email);
+            return res.json({ sucesso: true, imageUrl: url, creditos: novos });
+          }
+        } catch(e) {}
+      }
+      if (state === 'failed' || state === 'FAILED' || state === 'fail') return res.json({ sucesso: false, erro: 'Falha no processamento.' });
+    }
+    return res.json({ sucesso: false, erro: 'Tempo esgotado. Tente novamente.' });
+  } catch (err) {
+    console.error('Erro restaurar:', err.message);
+    res.json({ sucesso: false, erro: err.message });
+  }
+});
+
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Restaures v2 rodando em http://localhost:${PORT}`));
