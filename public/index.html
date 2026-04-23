@@ -220,14 +220,14 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
     <div class="planos-grid">
       <div class="plano">
         <div class="plano-nome">Teste</div>
-        <div class="plano-preco">R$2,90</div>
+        <div class="plano-preco">R$3,90</div>
         <div class="plano-periodo">1 restauração</div>
         <div class="plano-desc">Experimente e veja o resultado antes de investir mais.</div>
         <button class="plano-btn" onclick="comprarLanding('teste')">Começar agora</button>
       </div>
       <div class="plano">
         <div class="plano-nome">Básico</div>
-        <div class="plano-preco">R$9,90</div>
+        <div class="plano-preco">R$14,90</div>
         <div class="plano-periodo">5 restaurações</div>
         <div class="plano-desc">Ideal para restaurar fotos da família.</div>
         <button class="plano-btn" onclick="comprarLanding('basico')">Começar agora</button>
@@ -235,7 +235,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
       <div class="plano destaque">
         <div class="plano-badge">⭐ MAIS VENDIDO</div>
         <div class="plano-nome">Econômico</div>
-        <div class="plano-preco">R$17,90</div>
+        <div class="plano-preco">R$24,90</div>
         <div class="plano-periodo">10 restaurações</div>
         <div class="plano-desc">O favorito dos nossos clientes. Melhor custo-benefício.</div>
         <button class="plano-btn" onclick="comprarLanding('economico')">Escolher este</button>
@@ -249,6 +249,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
         <button class="plano-btn" onclick="comprarLanding('familia')">Escolher este</button>
       </div>
     </div>
+    <div style="text-align:center;margin-top:1.5rem;color:var(--muted);font-size:.85rem">✦ Cada imagem gasta 1 crédito &nbsp;·&nbsp; Seus créditos não vencem nunca</div>
   </section>
 
   <div class="stats">
@@ -277,7 +278,10 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
       <input type="file" id="fileInput" accept="image/*">
     </div>
     <div id="previewArea">
-      <div class="result-label">Foto selecionada</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem">
+        <div class="result-label" style="margin-bottom:0">Foto selecionada</div>
+        <button onclick="trocarImagem()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:.25rem .7rem;border-radius:6px;font-size:.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">⟳ Trocar imagem</button>
+      </div>
       <img id="previewImg" class="preview-img" alt="Preview">
     </div>
     <div id="loadingArea">
@@ -298,18 +302,18 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
       <div class="planos-mini">
         <div class="plano-mini" onclick="comprarPlano('teste')">
           <div class="pm-nome">Teste</div>
-          <div class="pm-preco">R$2,90</div>
+          <div class="pm-preco">R$3,90</div>
           <div class="pm-imgs">1 restauração</div>
         </div>
         <div class="plano-mini destaque-mini" onclick="comprarPlano('basico')">
           <div class="pm-nome">Básico</div>
-          <div class="pm-preco">R$9,90</div>
+          <div class="pm-preco">R$14,90</div>
           <div class="pm-imgs">5 restaurações</div>
         </div>
         <div class="plano-mini" onclick="comprarPlano('economico')">
           <div class="pm-badge">⭐ MAIS VENDIDO</div>
           <div class="pm-nome">Econômico</div>
-          <div class="pm-preco">R$17,90</div>
+          <div class="pm-preco">R$24,90</div>
           <div class="pm-imgs">10 restaurações</div>
         </div>
         <div class="plano-mini" onclick="comprarPlano('familia')">
@@ -320,7 +324,8 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
       </div>
       <div class="contato-info">
         <strong>Após o pagamento</strong>
-        Seus créditos serão liberados automaticamente em instantes!
+        Seus créditos serão liberados automaticamente em instantes!<br><br>
+        <span style="color:var(--gold)">✦ Cada imagem gasta 1 crédito &nbsp;·&nbsp; Seus créditos não vencem</span>
       </div>
     </div>
 
@@ -647,6 +652,15 @@ function copiarPix() {
     msg.style.display = 'block';
     setTimeout(() => msg.style.display = 'none', 3000);
   });
+}
+
+function trocarImagem() {
+  selectedFile = null;
+  document.getElementById('previewArea').style.display = 'none';
+  document.getElementById('previewImg').src = '';
+  document.getElementById('fileInput').value = '';
+  renderAcoes();
+  fileInput.click();
 }
 
 function voltarAoUpload() {
