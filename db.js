@@ -21,7 +21,7 @@ module.exports = {
 
   criarUsuario(id, email, senha) {
     const data = load();
-    data.usuarios[email] = { id, email, senha, creditos: 2, criado_em: new Date().toISOString() };
+    data.usuarios[email] = { id, email, senha, creditos: 0, criado_em: new Date().toISOString() };
     save(data);
   },
 
