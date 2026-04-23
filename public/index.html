@@ -423,29 +423,32 @@ function renderAcoes() {
   }
 }
 
-function renderHistorico() {
-  const grid  = document.getElementById('histGrid');
-  const local = JSON.parse(localStorage.getItem('restaures_historico_' + USUARIO?.email) || '[]');
-  if (!local.length) {
-    grid.innerHTML = '<div class="hist-vazio" style="grid-column:1/-1">Suas restaurações aparecerão aqui após processar a primeira foto.</div>';
-    return;
-  }
-  grid.innerHTML = local.slice().reverse().map(h => `
-    <div class="hist-item">
-      <img src="${h.url}" alt="Restauração">
-      <div class="hist-item-info">
-        <span class="hist-data">${h.data}</span>
-        <a href="${h.url}" download="restaurada.png" class="hist-dl">⬇ Baixar</a>
+async function renderHistorico() {
+  const grid = document.getElementById('histGrid');
+  grid.innerHTML = '<div class="hist-vazio" style="grid-column:1/-1">Carregando...</div>';
+  try {
+    const res   = await fetch('/api/historico', { headers: { Authorization: `Bearer ${TOKEN}` } });
+    const items = await res.json();
+    if (!items.length) {
+      grid.innerHTML = '<div class="hist-vazio" style="grid-column:1/-1">Suas restaurações aparecerão aqui após processar a primeira foto.</div>';
+      return;
+    }
+    grid.innerHTML = items.map(h => `
+      <div class="hist-item">
+        <img src="${h.url}" alt="Restauração" onerror="this.style.display='none'">
+        <div class="hist-item-info">
+          <span class="hist-data">${new Date(h.criado_em).toLocaleDateString('pt-BR')}</span>
+          <a href="${h.url}" download="restaurada.png" class="hist-dl">⬇ Baixar</a>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } catch {
+    grid.innerHTML = '<div class="hist-vazio" style="grid-column:1/-1">Erro ao carregar histórico.</div>';
+  }
 }
 
-function salvarHistorico(url) {
-  const key   = 'restaures_historico_' + USUARIO?.email;
-  const local = JSON.parse(localStorage.getItem(key) || '[]');
-  local.push({ url, data: new Date().toLocaleDateString('pt-BR') });
-  localStorage.setItem(key, JSON.stringify(local.slice(-50)));
+async function salvarHistorico(url) {
+  // Salvo automaticamente no servidor via /api/restaurar
   renderHistorico();
 }
 
