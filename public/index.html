@@ -290,6 +290,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
         <div><div class="result-label">Restaurada ✦</div><img id="restoredImg" class="result-img" alt="Restaurada"></div>
       </div>
       <a id="downloadBtn" href="#" class="download-btn" download="restaurada.png">⬇ Baixar foto restaurada</a>
+      <button onclick="voltarAoUpload()" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.7rem;border-radius:8px;font-size:.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.5rem;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">← Restaurar outra foto</button>
     </div>
 
     <div id="planosArea">
@@ -643,6 +644,17 @@ function copiarPix() {
     msg.style.display = 'block';
     setTimeout(() => msg.style.display = 'none', 3000);
   });
+}
+
+function voltarAoUpload() {
+  selectedFile = null;
+  document.getElementById('resultArea').style.display  = 'none';
+  document.getElementById('previewArea').style.display = 'none';
+  document.getElementById('planosArea').style.display  = 'none';
+  document.getElementById('previewImg').src = '';
+  document.getElementById('fileInput').value = '';
+  renderAcoes();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function fileToBase64(file) {
