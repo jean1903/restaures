@@ -50,10 +50,10 @@ async function adicionarCreditos(email, quantidade) {
   return novos;
 }
 
-async function salvarRestauracao(email, url) {
+async function salvarRestauracao(email, url, url_original) {
   await axios.post(
     `${SUPABASE_URL}/rest/v1/restauracoes`,
-    { email, url },
+    { email, url, url_original },
     { headers: headers() }
   );
 }
