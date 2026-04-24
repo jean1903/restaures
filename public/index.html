@@ -294,9 +294,9 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
     <div id="resultArea">
       <div class="result-grid">
         <div><div class="result-label">Original</div><img id="originalImg" class="result-img" alt="Original"></div>
-        <div><div class="result-label">Restaurada ✦</div><img id="restoredImg" class="result-img" alt="Restaurada" style="cursor:pointer" onclick="verImagem(this.src)" title="Clique para ampliar"></div>
+        <div><div class="result-label">Restaurada ✦</div><img id="restoredImg" class="result-img" alt="Restaurada" style="cursor:pointer" onclick="verImagem(this.src, document.getElementById('originalImg').src)" title="Clique para ampliar"></div>
       </div>
-      <a id="downloadBtn" href="#" class="download-btn" download="restaurada.png">⬇ Baixar foto restaurada</a>
+      <button onclick="baixarImagem(document.getElementById('restoredImg').src,'restaurada.png')" class="download-btn" style="border:none;cursor:pointer;width:100%">⬇ Baixar foto restaurada</button>
       <button onclick="voltarAoUpload()" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.7rem;border-radius:8px;font-size:.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.5rem;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">← Restaurar outra foto</button>
     </div>
 
@@ -367,9 +367,21 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
 <div class="overlay" id="ovImagem">
   <div class="img-viewer">
     <button class="modal-close" onclick="fecharOverlay('ovImagem')" style="position:absolute;top:.7rem;right:.7rem">✕</button>
-    <img id="imagemAmpliada" src="" alt="Imagem restaurada">
+    <div id="originalArea" style="display:none;margin-bottom:.8rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+        <div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem">Antes</div>
+          <img id="imagemOriginal" src="" alt="Original" style="width:100%;border-radius:6px;border:1px solid var(--border)">
+        </div>
+        <div>
+          <div style="font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:.3rem">Depois ✦</div>
+          <img id="imagemAmpliada" src="" alt="Restaurada" style="width:100%;border-radius:6px;border:1px solid var(--border)">
+        </div>
+      </div>
+    </div>
+    <img id="imagemAmpliadaSingle" src="" alt="Restaurada" style="display:none;max-width:100%;max-height:70vh;border-radius:8px">
     <div class="img-viewer-actions">
-      <a id="imagemDownload" href="#" download="restaurada.png">⬇ Baixar</a>
+      <button id="imagemDownload" onclick="baixarImagem(this.dataset.url,'restaurada.png')" style="background:var(--gold);color:var(--dark);border:none;padding:.6rem 1.2rem;border-radius:8px;font-size:.85rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500">⬇ Baixar</button>
       <button onclick="fecharOverlay('ovImagem')">← Voltar ao painel</button>
     </div>
   </div>
@@ -452,10 +464,21 @@ async function renderHistorico() {
     }
     grid.innerHTML = items.map(h => `
       <div class="hist-item">
-        <img src="${h.url}" alt="Restauração" onerror="this.style.display='none'" style="cursor:pointer" onclick="verImagem('${h.url}')" title="Clique para ampliar">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          ${h.url_original ? `
+            <div style="position:relative">
+              <img src="${h.url_original}" alt="Original" style="width:100%;height:110px;object-fit:cover;display:block;border-radius:6px 0 0 0">
+              <span style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.7);color:#888;font-size:.6rem;padding:2px 5px;border-radius:3px">ANTES</span>
+            </div>
+          ` : ''}
+          <div style="position:relative">
+            <img src="${h.url}" alt="Restaurada" onerror="this.style.display='none'" style="width:100%;height:110px;object-fit:cover;display:block;cursor:pointer;border-radius:${h.url_original ? '0 6px 0 0' : '6px 6px 0 0'}" onclick="verImagem('${h.url}','${h.url_original||''}')" title="Clique para ampliar">
+            <span style="position:absolute;bottom:4px;right:4px;background:rgba(201,168,76,.9);color:#000;font-size:.6rem;padding:2px 5px;border-radius:3px">DEPOIS</span>
+          </div>
+        </div>
         <div class="hist-item-info">
           <span class="hist-data">${new Date(h.criado_em).toLocaleDateString('pt-BR')}</span>
-          <a href="${h.url}" download="restaurada.png" class="hist-dl">⬇ Baixar</a>
+          <button onclick="baixarImagem('${h.url}','restaurada.png')" class="hist-dl" style="background:none;border:1px solid var(--border);cursor:pointer;font-family:'DM Sans',sans-serif">⬇ Baixar</button>
         </div>
       </div>
     `).join('');
@@ -666,9 +689,34 @@ function copiarPix() {
   });
 }
 
-function verImagem(url) {
-  document.getElementById('imagemAmpliada').src = url;
-  document.getElementById('imagemDownload').href = url;
+async function baixarImagem(url, nome) {
+  try {
+    const res    = await fetch(url);
+    const blob   = await res.blob();
+    const link   = document.createElement('a');
+    link.href     = URL.createObjectURL(blob);
+    link.download = nome || 'restaurada.png';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  } catch {
+    window.open(url, '_blank');
+  }
+}
+
+function verImagem(url, urlOriginal) {
+  document.getElementById('imagemDownload').dataset.url = url;
+  const origArea = document.getElementById('originalArea');
+  const single   = document.getElementById('imagemAmpliadaSingle');
+  if (urlOriginal) {
+    document.getElementById('imagemAmpliada').src   = url;
+    document.getElementById('imagemOriginal').src   = urlOriginal;
+    origArea.style.display  = 'block';
+    single.style.display    = 'none';
+  } else {
+    single.src             = url;
+    single.style.display   = 'block';
+    origArea.style.display = 'none';
+  }
   abrirOverlay('ovImagem');
 }
 
