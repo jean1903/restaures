@@ -525,11 +525,15 @@ async function iniciarRestauracao() {
   document.getElementById('resultArea').style.display  = 'none';
   try {
     const base64 = await fileToBase64(selectedFile);
-    const res    = await fetch('/api/restaurar', {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 180000);
+    const res = await fetch('/api/restaurar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
       body: JSON.stringify({ image: base64 }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
     const data = await res.json();
     document.getElementById('loadingArea').style.display = 'none';
     if (data.sucesso) {
@@ -549,10 +553,18 @@ async function iniciarRestauracao() {
       document.getElementById('previewArea').style.display = 'block';
       renderAcoes();
     }
-  } catch {
-    document.getElementById('loadingArea').style.display = 'none';
+  } catch(err) {
     document.getElementById('previewArea').style.display = 'block';
-    alert('Erro de conexão. Tente novamente.');
+    document.getElementById('loadingArea').innerHTML = `
+      <div style="padding:1.5rem;text-align:center">
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:1rem">
+          O processamento pode ter continuado em segundo plano.<br>Clique abaixo para verificar o resultado.
+        </p>
+        <button onclick="location.reload()" style="background:var(--gold);color:var(--dark);border:none;padding:.7rem 1.5rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem">
+          ↺ Verificar resultado
+        </button>
+      </div>`;
+    document.getElementById('loadingArea').style.display = 'block';
   }
 }
 
