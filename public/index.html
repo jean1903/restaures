@@ -525,46 +525,53 @@ async function iniciarRestauracao() {
   document.getElementById('resultArea').style.display  = 'none';
   try {
     const base64 = await fileToBase64(selectedFile);
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 180000);
-    const res = await fetch('/api/restaurar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
-      body: JSON.stringify({ image: base64 }),
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    const data = await res.json();
+    // Tenta até 5 vezes com 10s de intervalo entre tentativas
+    let data = null;
+    for (let tentativa = 1; tentativa <= 5; tentativa++) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 120000);
+        const res = await fetch('/api/restaurar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
+          body: JSON.stringify({ image: base64 }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+        data = await res.json();
+        break;
+      } catch(e) {
+        if (tentativa < 5) {
+          await new Promise(r => setTimeout(r, 10000));
+          continue;
+        }
+      }
+    }
+
     document.getElementById('loadingArea').style.display = 'none';
-    if (data.sucesso) {
+
+    if (data && data.sucesso) {
       document.getElementById('originalImg').src  = URL.createObjectURL(selectedFile);
       document.getElementById('restoredImg').src  = data.imageUrl;
-      document.getElementById('downloadBtn').href = data.imageUrl;
       document.getElementById('resultArea').style.display = 'block';
       atualizarCreditos(data.creditos);
       salvarHistorico(data.imageUrl);
       if (data.creditos > 0) renderAcoes();
       else mostrarPlanos();
-    } else if (data.semCreditos) {
+    } else if (data && data.semCreditos) {
       mostrarPlanos();
       document.getElementById('previewArea').style.display = 'block';
+    } else if (data && data.erro) {
+      document.getElementById('previewArea').style.display = 'block';
+      renderAcoes();
     } else {
-      alert('Erro: ' + data.erro);
       document.getElementById('previewArea').style.display = 'block';
       renderAcoes();
     }
-  } catch(err) {
+  } catch(e) {
+    document.getElementById('loadingArea').style.display = 'none';
     document.getElementById('previewArea').style.display = 'block';
-    document.getElementById('loadingArea').innerHTML = `
-      <div style="padding:1.5rem;text-align:center">
-        <p style="color:var(--muted);font-size:.88rem;margin-bottom:1rem">
-          O processamento pode ter continuado em segundo plano.<br>Clique abaixo para verificar o resultado.
-        </p>
-        <button onclick="location.reload()" style="background:var(--gold);color:var(--dark);border:none;padding:.7rem 1.5rem;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem">
-          ↺ Verificar resultado
-        </button>
-      </div>`;
-    document.getElementById('loadingArea').style.display = 'block';
+    renderAcoes();
   }
 }
 
