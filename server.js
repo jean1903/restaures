@@ -178,17 +178,6 @@ app.post('/api/pagamento/webhook', async (req, res) => {
 //  ADMIN
 // ══════════════════════════════════════════════════
 
-// Rota GET secreta para adicionar créditos via link
-app.get('/api/admin/addme', async (req, res) => {
-  const { secret, email, creditos } = req.query;
-  if (secret !== ADMIN_SECRET) return res.send('❌ Sem permissão.');
-  if (!email || !creditos) return res.send('❌ Parâmetros inválidos.');
-  const u = await db.getUsuario(email);
-  if (!u) return res.send('❌ Usuário não encontrado.');
-  const novo = await db.adicionarCreditos(email, parseInt(creditos));
-  res.send(`✅ +${creditos} créditos adicionados para ${email}. Saldo atual: ${novo}`);
-});
-
 app.post('/api/admin/creditos', async (req, res) => {
   const { secret, email, creditos } = req.body;
   if (secret !== ADMIN_SECRET) return res.status(403).json({ erro: 'Sem permissão.' });
@@ -275,6 +264,17 @@ app.get('/api/historico', auth, async (req, res) => {
   } catch (err) {
     res.json([]);
   }
+});
+
+// Rota GET secreta para adicionar créditos via link
+app.get('/api/admin/addme', async (req, res) => {
+  const { secret, email, creditos } = req.query;
+  if (secret !== ADMIN_SECRET) return res.send('❌ Sem permissão.');
+  if (!email || !creditos) return res.send('❌ Parâmetros inválidos.');
+  const u = await db.getUsuario(email);
+  if (!u) return res.send('❌ Usuário não encontrado.');
+  const novo = await db.adicionarCreditos(email, parseInt(creditos));
+  res.send(`✅ +${creditos} créditos adicionados para ${email}. Saldo atual: ${novo}`);
 });
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
