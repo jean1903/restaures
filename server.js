@@ -197,9 +197,10 @@ app.post('/api/restaurar', auth, async (req, res) => {
   try {
     const { image } = req.body;
     if (!image) return res.json({ sucesso: false, erro: 'Imagem não recebida.' });
-    const base64   = image.replace(/^data:image\/\w+;base64,/, '');
-    const imageUrl = await uploadImgBB(base64);
-    console.log('ImgBB:', imageUrl);
+    const base64      = image.replace(/^data:image\/\w+;base64,/, '');
+    const originalUrl = await uploadImgBB(base64); // upload da original
+    const imageUrl    = originalUrl; // placeholder até restaurar
+    console.log('Original ImgBB:', originalUrl);
 
     const createRes = await axios.post(
       'https://api.kie.ai/api/v1/jobs/createTask',
@@ -221,7 +222,7 @@ app.post('/api/restaurar', auth, async (req, res) => {
           const url = JSON.parse(data.resultJson)?.resultUrls?.[0];
           if (url) {
             const novos = await db.descontarCredito(req.email);
-            await db.salvarRestauracao(req.email, url);
+            await db.salvarRestauracao(req.email, url, originalUrl);
             return res.json({ sucesso: true, imageUrl: url, creditos: novos });
           }
         } catch(e) {}
