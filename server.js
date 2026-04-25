@@ -114,7 +114,7 @@ app.post('/api/pagamento/criar', auth, async (req, res) => {
   }
 });
 
-// Verificar status do pagamento
+// Verificar status do pagamento (SEM adicionar creditos - isso e feito pelo webhook)
 app.get('/api/pagamento/status/:id', auth, async (req, res) => {
   try {
     const response = await axios.get(
@@ -122,16 +122,7 @@ app.get('/api/pagamento/status/:id', auth, async (req, res) => {
       { headers: { Authorization: `Bearer ${MP_TOKEN}` } }
     );
     const status = response.data.status;
-    if (status === 'approved') {
-      const { email, plano, creditos } = response.data.metadata;
-      const userEmail = email || req.email;
-      const u = await db.getUsuario(userEmail);
-      if (u) {
-        const novo = await db.adicionarCreditos(userEmail, parseInt(creditos));
-        return res.json({ sucesso: true, status, creditos: novo });
-      }
-    }
-    res.json({ sucesso: false, status });
+    res.json({ sucesso: status === 'approved', status });
   } catch (err) {
     res.json({ erro: err.message });
   }
