@@ -225,34 +225,42 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
   </section>
 
   <section class="planos-section">
-    <h2 class="section-title">Escolha o plano ideal para você</h2>
-    <p class="section-sub">Sem assinatura. Pague apenas pelo que usar.</p>
-    <div class="planos-grid">
-      <div class="plano">
-        <div class="plano-nome">Teste</div>
-        <div class="plano-preco">R$3,90</div>
-        <div class="plano-periodo">1 restauração</div>
-        <div class="plano-desc">Experimente e veja o resultado antes de investir mais.</div>
-        <button class="plano-btn" onclick="comprarLanding('teste')">Começar agora</button>
+    <h2 class="section-title">Simples e sem surpresas</h2>
+    <p class="section-sub">Um único plano. Sem assinatura. Pague só quando precisar.</p>
+    <div style="max-width:380px;margin:2.5rem auto 0">
+      <div class="plano destaque" style="padding:2.5rem 2rem">
+        <div class="plano-badge">✦ ÚNICO PLANO</div>
+        <div class="plano-nome" style="margin-top:.5rem">Pacote Restauração</div>
+        <div class="plano-preco">R$9,90</div>
+        <div class="plano-periodo">3 restaurações</div>
+        <div class="plano-desc">Restaure 3 fotos antigas com inteligência artificial. Resultado nítido e com vida em segundos.</div>
+        <button class="plano-btn" onclick="iniciarJornada()" style="margin-top:1rem">Restaurar minhas fotos agora</button>
       </div>
-      <div class="plano">
-        <div class="plano-nome">Básico</div>
-        <div class="plano-preco">R$14,90</div>
-        <div class="plano-periodo">5 restaurações</div>
-        <div class="plano-desc">Ideal para restaurar fotos da família.</div>
-        <button class="plano-btn" onclick="comprarLanding('basico')">Começar agora</button>
-      </div>
-      <div class="plano destaque">
-        <div class="plano-badge">⭐ MAIS VENDIDO</div>
-        <div class="plano-nome">Econômico</div>
-        <div class="plano-preco">R$24,90</div>
-        <div class="plano-periodo">10 restaurações</div>
-        <div class="plano-desc">O favorito dos nossos clientes. Melhor custo-benefício.</div>
-        <button class="plano-btn" onclick="comprarLanding('economico')">Escolher este</button>
-      </div>
-
     </div>
     <div style="text-align:center;margin-top:1.5rem;color:var(--muted);font-size:.85rem">✦ Cada imagem gasta 1 crédito &nbsp;·&nbsp; Seus créditos não vencem nunca</div>
+  </section>
+
+
+  <section style="padding:5rem 2rem;background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <h2 class="section-title">O que nossos clientes dizem</h2>
+    <p class="section-sub">Resultados reais de pessoas reais</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:960px;margin:0 auto">
+      <div style="background:var(--dark3);border:1px solid var(--border);border-radius:14px;padding:1.5rem">
+        <div style="color:var(--gold);font-size:1rem;margin-bottom:.8rem">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--text);line-height:1.7;margin-bottom:1rem">"Mandei uma foto antiga dos meus avós que estava toda amarelada e rasgada. O resultado ficou incrível, parecia que a foto tinha sido tirada ontem!"</p>
+        <div style="font-size:.78rem;color:var(--muted)">— Maria S., Porto Alegre</div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid var(--border);border-radius:14px;padding:1.5rem">
+        <div style="color:var(--gold);font-size:1rem;margin-bottom:.8rem">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--text);line-height:1.7;margin-bottom:1rem">"Restaurei 3 fotos do casamento dos meus pais dos anos 70. Ficaram com cores vivas e nítidas. Minha mãe chorou de emoção ao ver!"</p>
+        <div style="font-size:.78rem;color:var(--muted)">— Carlos M., São Paulo</div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid var(--border);border-radius:14px;padding:1.5rem">
+        <div style="color:var(--gold);font-size:1rem;margin-bottom:.8rem">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--text);line-height:1.7;margin-bottom:1rem">"Processo super rápido e resultado surpreendente. Fotos que pareciam perdidas para sempre agora estão lindas. Vale muito cada centavo!"</p>
+        <div style="font-size:.78rem;color:var(--muted)">— Ana P., Curitiba</div>
+      </div>
+    </div>
   </section>
 
   <div class="stats">
@@ -302,9 +310,14 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
 
     <div id="planosArea">
       <div style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:1rem;text-align:center">Adquira créditos para continuar:</div>
-      <div class="planos-mini">
-        <div class="plano-mini" onclick="comprarPlano('teste')">
-          <div class="pm-nome">Teste</div>
+      <div class="planos-mini" style="grid-template-columns:1fr">
+        <div class="plano-mini destaque-mini" onclick="comprarPlano('basico')" style="padding:1.2rem">
+          <div class="pm-badge">✦ ÚNICO PLANO</div>
+          <div class="pm-nome">Pacote Restauração</div>
+          <div class="pm-preco">R$9,90</div>
+          <div class="pm-imgs">3 restaurações</div>
+        </div>
+      </div>
           <div class="pm-preco">R$3,90</div>
           <div class="pm-imgs">1 restauração</div>
         </div>
