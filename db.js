@@ -66,4 +66,24 @@ async function getRestauracoes(email) {
   return res.data || [];
 }
 
-module.exports = { getUsuario, criarUsuario, descontarCredito, adicionarCreditos, salvarRestauracao, getRestauracoes };
+module.exports = { getUsuario, criarUsuario, descontarCredito, adicionarCreditos, salvarRestauracao, getRestauracoes, pagamentoJaProcessado, marcarPagamentoProcessado };
+
+async function pagamentoJaProcessado(paymentId) {
+  try {
+    const res = await axios.get(
+      `${SUPABASE_URL}/rest/v1/pagamentos_processados?payment_id=eq.${paymentId}&limit=1`,
+      { headers: headers() }
+    );
+    return res.data.length > 0;
+  } catch { return false; }
+}
+
+async function marcarPagamentoProcessado(paymentId) {
+  try {
+    await axios.post(
+      `${SUPABASE_URL}/rest/v1/pagamentos_processados`,
+      { payment_id: String(paymentId) },
+      { headers: headers() }
+    );
+  } catch(e) { console.log('Erro ao marcar pagamento:', e.message); }
+}
