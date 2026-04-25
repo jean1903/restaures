@@ -686,11 +686,11 @@ async function verificarPagamento(paymentId, creditos) {
   try {
     const res  = await fetch(`/api/pagamento/status/${paymentId}`, { headers: { Authorization: `Bearer ${TOKEN}` } });
     const data = await res.json();
-    if (data.sucesso && data.status === 'approved') {
+    if (data.status === 'approved') {
       clearInterval(pixInterval);
       fecharOverlay('ovPix');
-      atualizarCreditos(data.creditos);
-      alert('✅ Pagamento aprovado! Seus créditos foram liberados.');
+      // Recarrega dados do usuario para pegar creditos atualizados pelo webhook
+      await carregarUsuario();
       renderAcoes();
     }
   } catch {}
