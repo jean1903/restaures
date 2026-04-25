@@ -221,6 +221,7 @@ app.post('/api/restaurar', auth, async (req, res) => {
     return res.json({ sucesso: false, erro: 'Tempo esgotado. Tente novamente.' });
   } catch (err) {
     console.error('Erro restaurar:', err.message);
+    console.error('Erro detalhes:', JSON.stringify(err.response?.data));
     res.json({ sucesso: false, erro: err.message });
   }
 });
