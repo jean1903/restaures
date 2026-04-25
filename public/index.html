@@ -227,13 +227,20 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
   <section class="planos-section">
     <h2 class="section-title">Simples e sem surpresas</h2>
     <p class="section-sub">Um único plano. Sem assinatura. Pague só quando precisar.</p>
-    <div style="max-width:380px;margin:2.5rem auto 0">
-      <div class="plano destaque" style="padding:2.5rem 2rem">
-        <div class="plano-badge">✦ ÚNICO PLANO</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;max-width:700px;margin:2.5rem auto 0">
+      <div class="plano" style="padding:2rem">
+        <div class="plano-nome">Starter</div>
+        <div class="plano-preco">R$4,90</div>
+        <div class="plano-periodo">1 restauração</div>
+        <div class="plano-desc">Experimente e veja o resultado antes de investir mais.</div>
+        <button class="plano-btn" onclick="iniciarJornada()" style="margin-top:1rem">Experimentar agora</button>
+      </div>
+      <div class="plano destaque" style="padding:2rem">
+        <div class="plano-badge">✦ MAIS POPULAR</div>
         <div class="plano-nome" style="margin-top:.5rem">Pacote Restauração</div>
         <div class="plano-preco">R$9,90</div>
         <div class="plano-periodo">3 restaurações</div>
-        <div class="plano-desc">Restaure 3 fotos antigas com inteligência artificial. Resultado nítido e com vida em segundos.</div>
+        <div class="plano-desc">Restaure 3 fotos antigas com inteligência artificial. Melhor custo-benefício.</div>
         <button class="plano-btn" onclick="iniciarJornada()" style="margin-top:1rem">Restaurar minhas fotos agora</button>
       </div>
     </div>
@@ -310,10 +317,15 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border
 
     <div id="planosArea">
       <div style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:1rem;text-align:center">Adquira créditos para continuar:</div>
-      <div style="margin-bottom:1rem">
-        <div class="plano-mini destaque-mini" onclick="comprarPlano('basico')" style="padding:1.2rem;border-color:var(--gold)">
-          <div class="pm-badge">✦ ÚNICO PLANO</div>
-          <div class="pm-nome" style="margin-top:.3rem">Pacote Restauração</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1rem">
+        <div class="plano-mini" onclick="comprarPlano('starter')" style="padding:1rem">
+          <div class="pm-nome">Starter</div>
+          <div class="pm-preco">R$4,90</div>
+          <div class="pm-imgs">1 restauração</div>
+        </div>
+        <div class="plano-mini destaque-mini" onclick="comprarPlano('basico')" style="padding:1rem;border-color:var(--gold)">
+          <div class="pm-badge">✦ POPULAR</div>
+          <div class="pm-nome" style="margin-top:.2rem">Pacote</div>
           <div class="pm-preco">R$9,90</div>
           <div class="pm-imgs">3 restaurações</div>
         </div>
